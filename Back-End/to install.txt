@@ -1,0 +1,9 @@
+
+##apt
+pip
+npm
+python3.11-venv
+##pip
+django
+djangorestframework
+django-cors-headers
