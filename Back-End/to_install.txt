@@ -1,7 +1,8 @@
 ##apt
+python3-pip
 pip
 npm
-node.js
+nodejs
 postgresql
 python3-venv
 ##end
