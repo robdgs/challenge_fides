@@ -1,6 +1,7 @@
 ##apt
 pip
 npm
+npx
 postgresql
 python3.11-venv
 ##end
