@@ -1,12 +1,12 @@
 ##apt
 pip
 npm
-npx
+node.js
 postgresql
-python3.11-venv
+python3-venv
 ##end
 ##pip
 django
 djangorestframework
 django-cors-headers
-##end
+##fin

@@ -29,4 +29,4 @@ source "$venv_path/bin/activate"
 
 ## install with pip
 
-sed -n '/##pip/,/##end/p' to_install.txt | sed '1d;$d' | xargs "$venv_path/bin/pip" install
+sed -n '/##pip/,/##fin/p' to_install.txt | sed '1d;$d' | xargs "$venv_path/bin/pip" install
