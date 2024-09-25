@@ -30,3 +30,7 @@ source "$venv_path/bin/activate"
 ## install with pip
 
 sed -n '/##pip/,/##fin/p' to_install.txt | sed '1d;$d' | xargs "$venv_path/bin/pip" install
+
+## install with npm
+
+npm install react-router-dom

@@ -1,10 +1,9 @@
-import './index.css';
+import "./index.css";
 
-export default function Navbar()
-{
-   return (
-   <div>
-    <p className="prova">hello</p>
-   </div>
-   )
+export default function Navbar() {
+  return (
+    <div>
+      <p className="prova">hello</p>
+    </div>
+  );
 }
