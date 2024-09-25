@@ -11,9 +11,7 @@ docker
 docker-compose
 ##end
 
-##pip
-django
-djangorestframework
-django-cors-headers
-psycopg2-binary
+##npm
+react
+react-router-dom
 ##fin

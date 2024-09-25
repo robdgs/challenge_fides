@@ -10,6 +10,12 @@ sudo apt install python3 -y
 
 sed -n '/##apt/,/##end/p' to_install.txt | sed '1d;$d' | xargs sudo apt install -y
 
+## install with npm
+
+sudo npm install -g $(sed -n '/##npm/,/##fin/p' to_install.txt | sed '1d;$d')
+
+## install with pip
+
 read -p "Enter the path to the virtual environment (or press Enter to create a new one): " venv_path
 
 if [ -z "$venv_path" ]; then
@@ -26,7 +32,4 @@ else
 fi
 
 source "$venv_path/bin/activate"
-
-## install with pip
-
-sed -n '/##pip/,/##fin/p' to_install.txt | sed '1d;$d' | xargs "$venv_path/bin/pip" install
+pip install -r requirements.txt
