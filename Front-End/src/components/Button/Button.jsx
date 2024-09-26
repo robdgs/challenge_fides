@@ -1,9 +1,10 @@
-import './index.css';
+import "./index.css";
 
-export default function Button({onclick, text}){
-    /* passare funzione onclick come prop(?)*/
-    /* guarda gestione eventi */
-    return (
-		<button className="button" onClick={onclick}>{text}</button>
-    )
+export default function Button({ onclick, text, type })
+{
+  return (
+    <button className="button" onClick={onclick} type={type}>
+      {text}
+    </button>
+  );
 }

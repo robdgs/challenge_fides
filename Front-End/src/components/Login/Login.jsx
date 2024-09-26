@@ -4,40 +4,56 @@ import './index.css';
 import Button from '../Button/Button';
 import Input from '../Input/Input';
 
-export default function Login()
-{
-	const [username, setUsername] = useState('');
-	const [password, setPassword] = useState('');
-	const navigate = useNavigate();
+export default function Login() {
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
+  const navigate = useNavigate();
+	
+  const onHandleSubmit = (e) => {
+    e.preventDefault();
+		if (username && password) {
+			console.log('Username:', username);
+			console.log('Password:', password);
+		} else {
+			console.log('Per favore, inserisci sia username che password.');
+		}
+  };
 
-    const onHandleClick = (e) => { 
-        console.log("sono stato cliccato");
-    };
+  const onRegisterClick = () => {
+    navigate('/register');
+  };
 
-    const onHandleSubmit = (e) => {
-        e.preventDefault();
-        console.log("sono stato submittato");
-      };
-
-	  const onRegisterClick = () => {
-		navigate('/register');
-	  };
-
-    return(
+  return (
     <div className="global">
-        <div className="login_box">
-                <h1>Login</h1>
+			{/* <div class="background">
+        <div class="shape"></div>
+        <div class="shape"></div>
+			</div> */}
+      <div className="login_box">
+        <h1>Login</h1>
         <div className="login_form">
-            <form className="login_form" onSubmit={onHandleSubmit}>
-                    <Input type="text" name="username" placeholder='username' value={username} onChange={(e) => setUsername(e.target.value)}/>
-                    <Input type="password" name="password" placeholder='password' value={password} onChange={(e) => setPassword(e.target.value)}/>
-					<div>
-						<Button onclick={onHandleClick} text={"Login"} />
-						<Button onclick={onRegisterClick} text={"Register"} />
-					</div>
-            </form>
+          <form className="login_form" onSubmit={(e)=> onHandleSubmit(e)}>
+            <Input
+              type="text"
+              name="username"
+              placeholder="username"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+            />
+            <Input
+              type="password"
+              name="password"
+              placeholder="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+            />
+            <div>
+              <Button text={"Login"} type={"submit"}/>
+              <Button onclick={onRegisterClick} text={"Register"} type={"submit"}/>
+            </div>
+          </form>
         </div>
-        </div>
+      </div>
     </div>
-    )
+  );
 }
