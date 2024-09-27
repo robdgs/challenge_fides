@@ -75,9 +75,18 @@ class UserLogout(APIView):
 	permission_classes = (permissions.AllowAny,)
 	authentication_classes = ()
 	def post(self, request):
-		logout(request)
-		return Response(status=status.HTTP_200_OK)
-
+		try:
+			access_token = AccessToken.objects.get(token=request.auth.token)
+			RefreshToken.objects.get(access_token=access_token).delete()
+			access_token.delete()
+			logout(request)
+			return Response(status=status.HTTP_200_OK)
+		except AccessToken.DoesNotExist:
+			return Response({'error': 'invalid token'}, status=status.HTTP_400_BAD_REQUEST)
+		except Exception as e:
+			return Response({'error': str(e)}, status=error_codes.get(str(e), status.HTTP_400_BAD_REQUEST))
+		return Response(status=status.HTTP_400_BAD_REQUEST)
+		
 
 class UserView(APIView):
 	permission_classes = (permissions.IsAuthenticated, TokenHasScope , TokenHasReadWriteScope)
