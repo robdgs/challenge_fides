@@ -36,6 +36,10 @@
       "last 1 safari version"
     ]
   },
+  "description": "This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).",
+  "main": "index.js",
+  "author": "",
+  "license": "ISC",
   "devDependencies": {
     "eslint": "^8.57.1",
     "prettier": "^3.3.3",
