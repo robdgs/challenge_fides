@@ -5,17 +5,20 @@ from .serializers import UserRegisterSerializer, UserLoginSerializer, UserSerial
 from rest_framework import permissions, status
 from .validations import custom_validation, validate_email, validate_password
 from oauth2_provider.contrib.rest_framework import OAuth2Authentication , TokenHasScope, TokenHasReadWriteScope
-
+from .errors import error_codes
 class UserRegister(APIView):
 	permission_classes = (permissions.AllowAny,)
 	def post(self, request):
-		clean_data = custom_validation(request.data)
-		serializer = UserRegisterSerializer(data=clean_data)
-		if serializer.is_valid(raise_exception=True):
-			user = serializer.create(clean_data)
-			if user:
-				return Response(serializer.data, status=status.HTTP_201_CREATED)
-		return Response(status=status.HTTP_400_BAD_REQUEST) ##TODO ADD ERROR MORE ERROR MESSAGES
+		try:
+			clean_data = custom_validation(request.data)
+			serializer = UserRegisterSerializer(data=clean_data)
+			if serializer.is_valid(raise_exception=True):
+				user = serializer.create(clean_data)
+				if user:
+					return Response(serializer.data, status=status.HTTP_201_CREATED)
+		except Exception as e:
+			return Response({'error': str(e)}, status=error_codes.get(str(e), status.HTTP_400_BAD_REQUEST))
+		return Response(status=status.HTTP_400_BAD_REQUEST)
 
 
 class UserLogin(APIView):
