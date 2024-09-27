@@ -49,6 +49,7 @@ INSTALLED_APPS = [
 	'rest_framework',
 	'my_login',
 	'corsheaders',
+	'oauth2_provider',
 ]
 
 MIDDLEWARE = [
@@ -113,6 +114,7 @@ REST_FRAMEWORK = {
     ),
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework.authentication.SessionAuthentication',
+		'oath2_provider.contrib.rest_framework.OAuth2Authentication',
     ),
 }
 
