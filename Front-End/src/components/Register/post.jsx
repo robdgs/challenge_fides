@@ -19,6 +19,17 @@ export const onHandleSubmit = async (e, username, email, password, navigate) => 
         // Gestisci la risposta del server, ad esempio, naviga a un'altra pagina
         navigate('/home');
       } else {
+				const errorData = await response.json();
+				console.error('Errore nella risposta del server:', errorData.error);
+				if (errorData.error === "['email already in use']") {
+          alert('L\'email inserita è già in uso. Scegli un\'altra email.');
+        } else if (errorData.error === "['weak password']") {
+          alert('La password deve contenere almeno 8 caratteri.');
+        } else if (errorData.error === "['username already in use']") {
+          alert('Per favore, inserisci un nome utente valido.');
+        } else {
+          alert('Si è verificato un errore. Per favore, riprova.');
+        }
         console.error('Errore nella risposta del server:', response.statusText);
       }
     } catch (error) {

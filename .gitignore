@@ -35,6 +35,8 @@ tmp/
 temp/
 *.tmp
 *.swp
+*__pycache__/
+*.pyc
 
-
+migrations/
 venv*
