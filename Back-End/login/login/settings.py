@@ -49,6 +49,7 @@ INSTALLED_APPS = [
 	'rest_framework',
 	'my_login',
 	'corsheaders',
+	'oauth2_provider',
 ]
 
 MIDDLEWARE = [
@@ -97,7 +98,7 @@ DATABASES = {
 	'default': {
 		'ENGINE': 'django.db.backends.postgresql',
 		'NAME': 'user_db',
-		'USER': 'lollo',
+		'USER': 'pasquale',
 		'PASSWORD' : '123',
 		'HOST': 'localhost',
 		'PORT': '5433',
@@ -113,6 +114,7 @@ REST_FRAMEWORK = {
     ),
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework.authentication.SessionAuthentication',
+		'oauth2_provider.contrib.rest_framework.OAuth2Authentication',
     ),
 }
 
@@ -135,7 +137,13 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+# settings.py
 
+OAUTH2_PROVIDER = {
+    'ACCESS_TOKEN_EXPIRE_SECONDS': 3600,  # 1 hour
+    'REFRESH_TOKEN_EXPIRE_SECONDS': 86400,  # 1 day
+    'ROTATE_REFRESH_TOKEN': True,
+}
 # Internationalization
 # https://docs.djangoproject.com/en/4.2/topics/i18n/
 
