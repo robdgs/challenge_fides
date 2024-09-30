@@ -35,7 +35,10 @@ tmp/
 temp/
 *.tmp
 *.swp
+*__pycache__/
+*.pyc
 
 .venv
 venv*
 node_modules
+migrations/
