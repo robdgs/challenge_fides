@@ -11,8 +11,8 @@ User = get_user_model()
 @receiver(post_migrate)
 def create_oauth2_application_and_superuser(sender, **kwargs):
     # Create superuser if it doesn't exist
-    if not User.objects.filter(username='pasquale').exists():
-        User.objects.create_superuser('pasquale', 'pasquale@example.com', '123')
+    if not User.objects.filter(email='pasquale@example.com').exists():
+        User.objects.create_superuser(email='pasquale@example.com', password='123')
 
     # Create OAuth2 application if it doesn't exist
     if not Application.objects.filter(name='my_login').exists():
