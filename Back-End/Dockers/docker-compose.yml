@@ -1,0 +1,35 @@
+version: '3.8'
+
+services:
+  user_db:
+    build: user_db/
+    container_name: container_user_db
+    ports:
+      - "5433:5432"  # Map host port 5433 to container port 5432
+  task_db:
+    build: task_db/
+    container_name: container_task_db
+    ports:
+      - "5434:5432"  # Map host port 5434 to container port 5432
+  login_db:
+    build: login_db/
+    container_name: container_login_db
+    ports:
+      - "5435:5432"  # Map host port 5435 to container port 5432
+    networks:
+      - login_network
+  login_service:
+    build: login_service/
+    container_name: container_login_service
+    ports:
+      - "8000:8000"  # Map host port 8000 to container port 8000
+    depends_on:
+      - login_db
+    networks:
+      - login_network
+    env_file:
+      - .env
+
+networks:
+  login_network:
+    driver: bridge
