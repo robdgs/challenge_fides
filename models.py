@@ -59,7 +59,7 @@ class get_chat_rooms(APIView):
 		if not user_id:
 			return Response({"error": "user_id is required"}, status=400)
 		
-		chat_rooms = chat_room.objects.
+		chat_rooms = chat_room.objects.filter(users__user_id=user_id)
 		serializer = chat_roomSerializer(chat_rooms, many=True)
 		return Response(serializer.data)
 	
