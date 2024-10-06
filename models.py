@@ -95,7 +95,12 @@ from channels.generic.websocket import AsyncConsumer
 
 class ChatConsumer(AsyncConsumer):
 	async def connect(self):
-		return self.accept()
+		user = self.scope["user"]
+		if user.is_authenticated:
+			await self.accept()
+		else:
+			await self.close()
+
 	
 	async def disconnect(self, close_code):
 		pass
@@ -124,21 +129,20 @@ class ChatConsumer(AsyncConsumer):
 
 from django.urls import path
 from channels.routing import ProtocolTypeRouter, URLRouter
-from channels.auth import AuthMiddlewareStack
 from channels.security.websocket import AllowedHostsOriginValidator
-#from my_chat.consumers import ChatConsumer
+#from .consumers import ChatConsumer
+#from .middleware import TokenAuthMiddlewareStack
 
 application = ProtocolTypeRouter({
-	'websocket': AllowedHostsOriginValidator(
-		AuthMiddlewareStack(
-			URLRouter(
-				[
-					path('ws/chat/<room_id>/', ChatConsumer),
-				]
-			)
-		)
-	)
+    'websocket': AllowedHostsOriginValidator(
+        TokenAuthMiddlewareStack(  # Use the custom middleware
+            URLRouter([
+                path('ws/chat/<room_id>/', ChatConsumer.as_asgi()),
+            ])
+        )
+    ),
 })
+
 
 ##middleware.py
 
