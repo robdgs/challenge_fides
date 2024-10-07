@@ -42,6 +42,8 @@ INSTALLED_APPS = [
 	'rest_framework',
 	'my_chat',
 	'oauth2_provider',
+	'corsheaders',
+	'channels',
 ]
 
 MIDDLEWARE = [
@@ -53,6 +55,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+	'my_chat.middleware.TokenAuthMiddleware',
 ]
 
 ROOT_URLCONF = 'chat.urls'
