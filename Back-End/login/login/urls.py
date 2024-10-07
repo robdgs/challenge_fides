@@ -30,4 +30,6 @@ oauth2_urls = [
 	path('token/', oauth2_views.TokenView.as_view(), name="token"),
 	path('revoke_token/', oauth2_views.RevokeTokenView.as_view(), name="revoke-token"),
 	path('introspect/', oauth2_views.IntrospectTokenView.as_view(), name="introspect"),
+	path('applications/', oauth2_views.ApplicationList.as_view(), name="list"),
+	path('applications/register/', oauth2_views.ApplicationRegistration.as_view(), name="register"),
 ]

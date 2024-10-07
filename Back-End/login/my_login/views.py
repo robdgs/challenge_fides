@@ -11,6 +11,8 @@ from oauth2_provider.models import AccessToken , Application, RefreshToken
 from oauth2_provider.settings import oauth2_settings
 from oauthlib.common import generate_token
 from django.utils import timezone
+from django.http import JsonResponse
+from django.views.decorators.csrf import ensure_csrf_cookie
 
 
 class UserRegister(APIView):
@@ -96,3 +98,7 @@ class UserView(APIView):
 	def get(self, request):
 		serializer = UserSerializer(request.user)
 		return Response({'user': serializer.data}, status=status.HTTP_200_OK)
+
+@ensure_csrf_cookie
+def get_csrf_token(request):
+    return JsonResponse({'detail': 'CSRF cookie set'})
