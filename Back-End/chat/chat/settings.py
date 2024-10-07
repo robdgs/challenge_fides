@@ -91,7 +91,15 @@ oauth2_settings = {
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'NAME': 'chat_db',
+        'USER': 'pasquale',
+        'PASSWORD': '123',
+        'HOST': 'localhost',
+        'PORT': '5436',
+    },
+    'backup': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': str(BASE_DIR / 'db.sqlite3'),
     }
 }
 

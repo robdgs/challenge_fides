@@ -2,7 +2,6 @@ from django.urls import path
 from . import views
 
 urlpatterns = [
-	path('send', views.MessageSend.as_view(), name='send'),
-	#path('receive', views.MessageReceive.as_view(), name='receive'),
-	#path('get', views.MessageGet.as_view(), name='get'),
+	path('chat_rooms/', views.get_chat_rooms.as_view()),
+	path('chat_messages/', views.get_messages_in_chat_room.as_view()),
 ]

@@ -25,4 +25,4 @@ class chat_message(models.Model):
 def get_user_model(id):
 	return User.objects.get(id=id)
 
-get_user_model().id = models.ForeignKey(User, on_delete=models.CASCADE)
+#get_user_model().id = models.ForeignKey(User, on_delete=models.CASCADE)

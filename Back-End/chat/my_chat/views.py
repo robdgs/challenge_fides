@@ -2,7 +2,7 @@ from django.shortcuts import render
 from rest_framework.response import Response
 from rest_framework import status
 from oauth2_provider.contrib.rest_framework import TokenHasReadWriteScope, TokenHasScope
-from rest_framework import APIView
+from rest_framework.views import APIView
 from .models import chat_room, chat_message, user
 from requests import Response
 from .serializers import chat_roomSerializer, chat_messageSerializer, userSerializer

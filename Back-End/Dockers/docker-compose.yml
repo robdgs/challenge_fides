@@ -18,6 +18,11 @@ services:
       - "5435:5432"  # Map host port 5435 to container port 5432
     networks:
       - login_network
+  chat_db:
+    build: chat_db/
+    container_name: container_chat_db
+    ports:
+      - "5436:5432"  # Map host port 5436 to container port 5432
 
 networks:
   login_network:
