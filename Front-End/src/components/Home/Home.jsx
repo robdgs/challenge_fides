@@ -1,19 +1,29 @@
-import React from 'react';
+import React, { useState } from 'react';
 import './index.css';
+import Chat from '../Chat/Chat';
 // import { Nav, navbar } from 'react-bootstrap';
 // import 'bootstrap/dist/css/bootstrap.min.css';
 
 const Home = () => {
+	const [isDivVisible, setIsDivVisible] = useState(false);
+
+	const toggleDiv = () => {
+    setIsDivVisible(!isDivVisible);
+  };
+
   return (
-    <div className="global">
+    <div className="home">
 			<div className="navbar">
 				<h1>logo</h1>
 				<p>panino</p>
 				{/* Aggiungi il contenuto della tua home page qui */}
 			</div>
 			<div className="undernavbar">
-				<div className="sidebar"></div>
-				<div className="content"></div>
+        <div className="sidebar">
+					<button onClick={toggleDiv}>Toggle Div</button>
+				</div>
+        {isDivVisible && <Chat />}
+        <div className={`content ${isDivVisible ? 'content-reduced' : ''}`}></div>
 			</div>
     </div>
   );
