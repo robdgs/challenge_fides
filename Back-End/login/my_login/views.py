@@ -59,7 +59,6 @@ class UserLogin(APIView):
 					application=app,
 					token=generate_token(),
 					access_token=AToken,
-					expires=expires,
 				)
 				return Response({
 					'access_token': AToken.token,

@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 """
 
 from pathlib import Path
+import secrets
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -83,6 +84,13 @@ oauth2_settings = {
 	'INTROSPECT_URL': 'http://localhost:8000/o/introspect/',
 	'CLIENT_ID': '',
 	'CLIENT_SECRET': '',
+	'TOKEN_CLIENT_ID': secrets.token_urlsafe(32),
+	'TOKEN_CLIENT_SECRET': secrets.token_urlsafe(64),
+	'TOKEN': '',
+	'REFRESH_TOKEN': '',
+	'EXPIRES': '',
+	'token_type': '',
+	'scope': '',
 }
 
 # Database
