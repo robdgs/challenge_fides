@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import './index.css';
-import Chat from '../Chat/Chat';
+import SideChats from '../Chat/SideChats';
 // import { Nav, navbar } from 'react-bootstrap';
 // import 'bootstrap/dist/css/bootstrap.min.css';
 
@@ -22,7 +22,7 @@ const Home = () => {
         <div className="sidebar">
 					<button onClick={toggleDiv}>Toggle Div</button>
 				</div>
-        {isDivVisible && <Chat />}
+        {isDivVisible && <SideChats />}
         <div className={`content ${isDivVisible ? 'content-reduced' : ''}`}></div>
 			</div>
     </div>

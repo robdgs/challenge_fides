@@ -35,6 +35,9 @@
 }
 
 .content {
+		border-top-left-radius: 20px;
+		background-color: rgb(187, 195, 216);
+		box-shadow: 5px 5px 20px #000000;
 		display: flex;
 		justify-content: center;
 		align-items: center;
