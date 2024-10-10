@@ -78,15 +78,19 @@ def register_self():
 	}
 
 	response = session.post(register_url, json=data, headers=headers)
-
-	print("Response:", response.text)
-	
+	print("Response status code:", response.status_code)
+	print("Response content:", response.text)
 	if response.status_code != 201:
 		raise Exception('Failed to register application')
-	app_data = response.json()
-	oauth2_settings['CLIENT_ID'] = app_data['client_id']
-	oauth2_settings['CLIENT_SECRET'] = app_data['client_secret']
-
+	try:
+		app_data = response.json()
+	except json.JSONDecodeError:
+		raise Exception('Failed to parse JSON response')
+	settings.oauth2_settings['CLIENT_ID'] = app_data['client_id']
+	settings.oauth2_settings['CLIENT_SECRET'] = app_data['client_secret']
+	print("Application registered successfully")
+	print("Client ID:", app_data['client_id'])
+	print("Client Secret:", app_data['client_secret'])
 # def get_access_token():
 #	token_url = 'http://localhost:8000/o/token/'
 #	data = {

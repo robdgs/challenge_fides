@@ -133,10 +133,12 @@ AUTH_PASSWORD_VALIDATORS = [
 # settings.py
 
 OAUTH2_PROVIDER = {
-    'ACCESS_TOKEN_EXPIRE_SECONDS': 3600,  # 1 hour
-    'REFRESH_TOKEN_EXPIRE_SECONDS': 86400,  # 1 day
-    'ROTATE_REFRESH_TOKEN': True,
+	'ACCESS_TOKEN_EXPIRE_SECONDS': 3600,  # 1 hour
+	'REFRESH_TOKEN_EXPIRE_SECONDS': 86400,  # 1 day
+	'ROTATE_REFRESH_TOKEN': True,
+	'ALLOWED_GRANT_TYPES': ['client_credentials', 'authorization_code', 'password', 'refresh_token'],
 }
+
 # Internationalization
 # https://docs.djangoproject.com/en/4.2/topics/i18n/
 

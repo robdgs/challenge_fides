@@ -13,7 +13,7 @@ from oauthlib.common import generate_token
 from django.utils import timezone
 from django.http import JsonResponse
 from django.views.decorators.csrf import ensure_csrf_cookie
-
+import login.settings
 
 class UserRegister(APIView):
 	permission_classes = (permissions.AllowAny,)
@@ -71,6 +71,16 @@ class UserLogin(APIView):
 			return Response({'error': str(e)}, status=error_codes.get(str(e), status.HTTP_400_BAD_REQUEST))
 		return Response(status=status.HTTP_400_BAD_REQUEST)
 
+
+class ServiceLogin(APIView):
+	permission_classes = (permissions.AllowAny,)
+	authentication_classes = (OAuth2Authentication,)
+	##
+	def post(self, request):
+		try:
+			data = request.data
+			service_name = data.get('service_name')
+			service_password = data.get('service_password')
 
 class UserLogout(APIView):
 	permission_classes = (permissions.AllowAny,)

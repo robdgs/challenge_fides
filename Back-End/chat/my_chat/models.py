@@ -16,7 +16,7 @@ class chat_room(models.Model):
 	messages = models.ManyToManyField('chat_message')
 
 class chat_message(models.Model):
-	room_id = models.ManyToManyField(chat_room)
+	room_id = models.ManyToOneRel(chat_room)
 	user_id = models.TextField()
 	message = models.TextField()
 	sender = models.TextField()

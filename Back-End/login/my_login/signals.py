@@ -30,6 +30,6 @@ def create_oauth2_application_and_superuser(sender, **kwargs):
 from oauth2_provider.signals import app_authorized
 
 def handle_app_authorized(sender, request, token, **kwargs):
-    print('App {} was authorized'.format(token.application.name))
+    print(f'App {token.application.name=} was authorized')
 
 app_authorized.connect(handle_app_authorized)
