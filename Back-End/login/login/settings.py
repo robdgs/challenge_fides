@@ -160,3 +160,5 @@ STATIC_ROOT = '/home/lollo/Documents/challenge_fides/Back-End/login/staticfiles'
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+SERVICE_PASSWORD = '123' # this is the password that the service will use to authenticate itself to the OAuth2 server
+##TODO: change this to a more secure password

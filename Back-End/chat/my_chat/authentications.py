@@ -43,7 +43,7 @@ def user_register_self():
 
 def register_self():
 	csrf_url = 'http://localhost:8000/login/get_csrf_token'
-	register_url = 'http://localhost:8000/o/login/Serviceregister'
+	register_url = 'http://localhost:8000/login/Serviceregister'
     
 	data = {
 		'name': 'Chat_' + datetime.strftime(datetime.now(), '%Y-%m-%d:%H%M%S'),
@@ -81,8 +81,8 @@ def register_self():
 		app_data = response.json()
 	except json.JSONDecodeError:
 		raise Exception('Failed to parse JSON response')
-	settings.oauth2_settings['CLIENT_ID'] = app_data['client_id']
-	settings.oauth2_settings['CLIENT_SECRET'] = app_data['client_secret']
+	oauth2_settings['CLIENT_ID'] = app_data['client_id']
+	oauth2_settings['CLIENT_SECRET'] = app_data['client_secret']
 
 # def get_access_token():
 #	token_url = 'http://localhost:8000/o/token/'
