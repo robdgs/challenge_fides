@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import './index.css';
 import SideChats from '../Chat/SideChats';
+import WebSocketComponent from '../WebSocket/WebSocket';
 // import { Nav, navbar } from 'react-bootstrap';
 // import 'bootstrap/dist/css/bootstrap.min.css';
 
@@ -22,7 +23,8 @@ const Home = () => {
         <div className="sidebar">
 					<button onClick={toggleDiv}>Toggle Div</button>
 				</div>
-        {isDivVisible && <SideChats />}
+        {/* {isDivVisible && <SideChats />} */}
+        {isDivVisible && <WebSocketComponent />}
         <div className={`content ${isDivVisible ? 'content-reduced' : ''}`}></div>
 			</div>
     </div>
