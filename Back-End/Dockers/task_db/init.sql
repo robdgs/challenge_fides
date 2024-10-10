@@ -35,3 +35,8 @@ VALUES
 	('culture', 'attivita` culturali'),
 	('alimentation', 'cura la tua alimentazione'),
 	('mental', 'migliora il tuo equilibrio mentale');
+
+-- Insert some initial data
+INSERT INTO takss (id_category, "name", "description", previous_task, next_task, duration)
+VALUES
+	(1, 'step by step', 'walking is a simple basic way to improve your health', 0, 0, 0);
