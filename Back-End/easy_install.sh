@@ -32,4 +32,13 @@ else
 fi
 
 source "$venv_path/bin/activate"
+
 pip install -r requirements.txt
+
+## install with pip
+
+sed -n '/##pip/,/##fin/p' to_install.txt | sed '1d;$d' | xargs "$venv_path/bin/pip" install
+
+## install with npm
+
+npm install react-router-dom

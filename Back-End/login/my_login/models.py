@@ -20,6 +20,7 @@ class AppUserManager(BaseUserManager):
 			raise ValueError('A password is required.')
 		user = self.create_user(email, password)
 		user.is_superuser = True
+		user.is_staff = True
 		user.save()
 		return user
 
@@ -30,6 +31,9 @@ class AppUser(AbstractBaseUser, PermissionsMixin):
 	username = models.CharField(max_length=50)
 	USERNAME_FIELD = 'email'
 	REQUIRED_FIELDS = ['username']
+	is_staff = models.BooleanField(default=False)
 	objects = AppUserManager()
 	def __str__(self):
 		return self.username
+
+
