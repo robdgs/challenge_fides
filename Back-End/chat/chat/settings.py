@@ -82,15 +82,14 @@ WSGI_APPLICATION = 'chat.wsgi.application'
 
 oauth2_settings = {
 	'INTROSPECT_URL': 'http://localhost:8000/o/introspect/',
-	'CLIENT_ID': '',
-	'CLIENT_SECRET': '',
-	'TOKEN_CLIENT_ID': secrets.token_urlsafe(32),
-	'TOKEN_CLIENT_SECRET': secrets.token_urlsafe(64),
+	'CLIENT_ID': secrets.token_urlsafe(32),
+	'CLIENT_SECRET': secrets.token_urlsafe(64),
 	'TOKEN': '',
 	'REFRESH_TOKEN': '',
 	'EXPIRES': '',
 	'token_type': '',
 	'scope': '',
+	'SERVICE_PASSWORD': '123', ## TODO: Change this to a more secure password
 }
 
 # Database

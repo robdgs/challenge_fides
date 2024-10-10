@@ -20,13 +20,6 @@ def login_self():
 
 	if response.status_code != 200:
 		raise Exception('Failed to login user')
-
-	oauth2_settings['TOKEN'] = response_data['access_token']
-	oauth2_settings['REFRESH_TOKEN'] = response_data['refresh_token']
-	oauth2_settings['EXPIRES'] = datetime.now() + timedelta(seconds=response_data['expires_in'])
-	oauth2_settings['token_type'] = response_data['token_type']
-	oauth2_settings['scope'] = response_data['scope']
-
 	return response.json()
 
 def user_register_self():
@@ -50,13 +43,16 @@ def user_register_self():
 
 def register_self():
 	csrf_url = 'http://localhost:8000/login/get_csrf_token'
-	register_url = 'http://localhost:8000/o/applications/register/'
+	register_url = 'http://localhost:8000/o/login/Serviceregister'
     
 	data = {
 		'name': 'Chat_' + datetime.strftime(datetime.now(), '%Y-%m-%d:%H%M%S'),
+		'service_password': oauth2_settings['SERVICE_PASSWORD'],
 		'client_type': 'confidential',
 		'authorization_grant_type': 'password',
 		'redirect_uris': 'http://localhost:8000',
+		'client_id': oauth2_settings['CLIENT_ID'],
+		'client_secret': oauth2_settings['CLIENT_SECRET'],
 	}
 
 	session = requests.Session()
@@ -78,9 +74,8 @@ def register_self():
 	}
 
 	response = session.post(register_url, json=data, headers=headers)
-	print("Response status code:", response.status_code)
-	print("Response content:", response.text)
-	if response.status_code != 201:
+	print("Response:", response.json())
+	if response.status_code != 200:
 		raise Exception('Failed to register application')
 	try:
 		app_data = response.json()
@@ -88,9 +83,7 @@ def register_self():
 		raise Exception('Failed to parse JSON response')
 	settings.oauth2_settings['CLIENT_ID'] = app_data['client_id']
 	settings.oauth2_settings['CLIENT_SECRET'] = app_data['client_secret']
-	print("Application registered successfully")
-	print("Client ID:", app_data['client_id'])
-	print("Client Secret:", app_data['client_secret'])
+
 # def get_access_token():
 #	token_url = 'http://localhost:8000/o/token/'
 #	data = {
