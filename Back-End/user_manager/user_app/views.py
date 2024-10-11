@@ -2,7 +2,7 @@ from django.shortcuts import render
 from rest_framework.views import APIView
 from rest_framework import permissions, status
 from rest_framework.response import Response
-from .models import users, avatars, friends
+from .models import Users, Avatars, Friends
 import json
 # Create your views here.
 
@@ -11,7 +11,7 @@ class GetUserParam(APIView):
 	def get(self, request):
 		request_data = request.json()
 		userid = request_data['account_id']
-		user = users.objects.get(account_id=userid)
+		user = Users.objects.get(account_id=userid)
 		if user:
 			return Response({
 				'level' : user.level
@@ -25,9 +25,9 @@ class GetUser(APIView):
 	def get(self, request):
 		request_data = request.json()
 		userid = request_data['account_id']
-		user = users.objects.get(account_id=userid)
+		user = Users.objects.get(account_id=userid)
 		if not user:
-			user = users.objects.create(
+			user = Users.objects.create(
 				account_id=userid,
 				first_name='',
 				last_name='',
@@ -52,7 +52,7 @@ class SetUser(APIView):
 		permission_classes = (permissions.AllowAny,)
 		request_data = request.json()
 		userid = request_data['account_id']
-		user = users.objects.get(account_id=userid)
+		user = Users.objects.get(account_id=userid)
 		if not user:
 			return Response({
 				'error' : 'user not found'
@@ -65,4 +65,25 @@ class SetUser(APIView):
 		return Response({
 			'info' : 'changes applied successfully'
 		}, status=status.HTTP_200_OK)
-	
+
+class SetAvatar(APIView):
+	def post(self, request):
+		permission_classes = (permissions.AllowAny,)
+		request_data = request.json()
+		userid = request_data['account_id']
+		avatarid = request_data['avatar_id']
+		user = Users.objects.get(account_id=userid)
+		avatar = Avatars.objects.get(id=avatarid)
+		if not user:
+			return Response({
+				'error' : 'user not found'
+			}, status=status.HTTP_400_BAD_REQUEST)
+		if not avatar:
+			return Response({
+				'error' : 'avatar not found'
+			}, status=status.HTTP_400_BAD_REQUEST)
+		user.avatar_id = avatar.id
+		user.save()
+		return Response({
+			'info' : 'avatar changed successfully'
+		}, status=status.HTTP_200_OK)

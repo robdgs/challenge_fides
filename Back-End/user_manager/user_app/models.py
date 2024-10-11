@@ -1,9 +1,10 @@
 from django.db import models
+from django.conf import settings
 
-class avatars(models.Model):
+class Avatars(models.Model):
     id = models.AutoField(primary_key=True)
 
-class users(models.Model):
+class Users(models.Model):
     id = models.AutoField(primary_key=True)
     account_id = models.IntegerField()
     first_name = models.CharField(max_length=255)
@@ -11,10 +12,11 @@ class users(models.Model):
     birth_date = models.DateField()
     bio = models.TextField()
     level = models.DecimalField(..., max_digits=6, decimal_places=3)
-    avatar_id = models.ManyToOneRel(avatars.id)
+    avatar_id = models.ForeignKey(Avatars, on_delete=models.PROTECT)
 
-class friends(models.Model):
+class Friends(models.Model):
     id = models.AutoField(primary_key=True)
-    user_1 = models.OneToOneField(users.id)
-    user_2 = models.OneToOneField(users.id)
+    user_1 = models.ForeignKey(Users, on_delete=models.CASCADE)
+    user_2 = models.ForeignKey(Users, on_delete=models.CASCADE)
+    accepted = models.BooleanField('False')
     
