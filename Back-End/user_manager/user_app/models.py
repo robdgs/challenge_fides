@@ -12,7 +12,7 @@ class Users(models.Model):
     birth_date = models.DateField()
     bio = models.TextField()
     level = models.DecimalField(..., max_digits=6, decimal_places=3)
-    avatar_id = models.ForeignKey(Avatars, on_delete=models.PROTECT)
+    avatar_id = models.ForeignKey(Avatars, on_delete=models.SET(0))
 
 class Friends(models.Model):
     id = models.AutoField(primary_key=True)
