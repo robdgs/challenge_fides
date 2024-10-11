@@ -13,7 +13,10 @@ from oauthlib.common import generate_token
 from django.http import JsonResponse
 from django.views.decorators.csrf import ensure_csrf_cookie
 from oauth2_provider.views import TokenView
-import login.settings
+from django.contrib.auth import authenticate, login
+from login.settings import client
+from .signals import create_oauth2_application_and_superuser
+
 
 class UserRegister(APIView):
 	permission_classes = (permissions.AllowAny,)
@@ -31,43 +34,45 @@ class UserRegister(APIView):
 
 
 class UserLogin(APIView):
-    permission_classes = (permissions.AllowAny,)
+	permission_classes = (permissions.AllowAny,)
 
-    def post(self, request):
-        try:
-            data = request.data
+	def post(self, request):
+		try:
+			create_oauth2_application_and_superuser()
+			data = request.data
+			
+			# Validate email and password
+			if not validate_email(data):
+				return Response({'error': 'Invalid email'}, status=status.HTTP_400_BAD_REQUEST)
+			if not validate_password(data):
+				return Response({'error': 'Invalid password'}, status=status.HTTP_400_BAD_REQUEST)
 
-            # Validate email and password
-            if not validate_email(data.get('email')):
-                return Response({'error': 'Invalid email'}, status=status.HTTP_400_BAD_REQUEST)
-            if not validate_password(data.get('password')):
-                return Response({'error': 'Invalid password'}, status=status.HTTP_400_BAD_REQUEST)
+			# Serialize and validate user data
+			serializer = UserLoginSerializer(data=data)
+			serializer.is_valid(raise_exception=True)
+			user = serializer.check_user(data)
+			login(request, user)
+			print(client)
+			# Prepare data for token request
+			token_data = {
+				'grant_type': 'password',
+				'username': data.get('email'),
+				'password': data.get('password'),
+				'client_id': client['CLIENT_ID'],
+				'client_secret': client['CLIENT_SECRET'],
+			}
 
-            # Serialize and validate user data
-            serializer = UserLoginSerializer(data=data)
-            serializer.is_valid(raise_exception=True)
-            user = serializer.check_user(data)
-            login(request, user)
+			# Make token request
+			token_view = TokenView.as_view()
+			token_request = request._request
+			token_request.POST = token_data
+			#token_request.META['HTTP_AUTHORIZATION'] = f"Basic {client['CLIENT_SECRET']}"
+			token_response = token_view(token_request)
 
-            # Prepare data for token request
-            token_data = {
-                'grant_type': 'password',
-                'username': data.get('email'),
-                'password': data.get('password'),
-                'client_id': 'your_client_id',  # Replace with your client ID
-                'client_secret': 'your_client_secret',  # Replace with your client secret
-            }
-
-            # Make token request
-            token_view = TokenView.as_view()
-            token_request = request._request
-            token_request.POST = token_data
-            token_response = token_view(token_request)
-
-            return token_response
-        except Exception as e:
-            return Response({'error': str(e)}, status=error_codes.get(str(e), status.HTTP_400_BAD_REQUEST))
-        return Response(status=status.HTTP_400_BAD_REQUEST)
+			return token_response
+		except Exception as e:
+				return Response({'error': str(e)}, status=error_codes.get(str(e), status.HTTP_400_BAD_REQUEST))
+		return Response(status=status.HTTP_400_BAD_REQUEST)
 
 
 class ServiceRegister(APIView):

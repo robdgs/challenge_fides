@@ -2,12 +2,14 @@ from urllib.parse import parse_qs
 from channels.middleware import BaseMiddleware
 from channels.db import database_sync_to_async
 from django.contrib.auth.models import AnonymousUser
-from oauth2_provider.models import AccessToken  # Using django-oauth-toolkit
+from oauth2_provider.models import AccessToken
 from channels.auth import AuthMiddlewareStack
+from django.conf import settings  # Assicurati di importare le impostazioni
 
 @database_sync_to_async
 def get_user_from_token(token):
     try:
+        print(settings.SECRET_KEY)
         access_token = AccessToken.objects.get(token=token)
         return access_token.user
     except AccessToken.DoesNotExist:

@@ -6,4 +6,4 @@ class MyLoginConfig(AppConfig):
 	name = 'my_login'
 
 	def ready(self):
-		import my_login.signals
+			pass

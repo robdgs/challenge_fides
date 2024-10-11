@@ -15,10 +15,12 @@ export const onHandleSubmit = async (e, email, password, navigate) => {
       if (response.ok) {
         const data = await response.json();
         console.log('Risposta dal server:', data);
-        // Gestisci la risposta del server, ad esempio, naviga a un'altra pagina
+				console.log('Risposta dal server:', data.access_token);
+				localStorage.setItem('token', data.access_token);
         navigate('/home');
       } else {
-        console.error('Errore nella risposta del server:', response.statusText);
+				const errorData = await response.json();
+        console.error('Errore nella risposta del server:', errorData);
       }
     } catch (error) {
       console.error('Errore nella richiesta:', error);
