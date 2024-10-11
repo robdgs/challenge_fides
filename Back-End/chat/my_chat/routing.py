@@ -6,7 +6,7 @@ from .middleware import TokenAuthMiddlewareStack
 
 application = ProtocolTypeRouter({
     'websocket': AllowedHostsOriginValidator(
-        TokenAuthMiddlewareStack(  # Use the custom middleware
+        TokenAuthMiddlewareStack(
             URLRouter([
                 path('ws/chat/<room_id>/', ChatConsumer.as_asgi()),
             ])

@@ -4,7 +4,6 @@ from rest_framework import status
 from oauth2_provider.contrib.rest_framework import TokenHasReadWriteScope, TokenHasScope
 from rest_framework.views import APIView
 from .models import chat_room, chat_message, user
-from requests import Response
 from .serializers import chat_roomSerializer, chat_messageSerializer, userSerializer
 
 class get_chat_rooms(APIView):
@@ -26,4 +25,3 @@ class get_messages_in_chat_room(APIView):
 		chat_messages = chat_message.objects.filter(room_id=room_id)[:400]
 		serializer = chat_messageSerializer(chat_messages, many=True)
 		return Response(serializer.data)
-	
