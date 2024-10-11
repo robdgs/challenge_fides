@@ -2,23 +2,9 @@ from django.shortcuts import render
 from rest_framework.views import APIView
 from rest_framework import permissions, status
 from rest_framework.response import Response
-from .models import Users, Avatars, Friends
+from .models import Users, Avatars, Friendships
 import json
 # Create your views here.
-
-class GetUserParam(APIView):
-	permission_classes = (permissions.AllowAny,)
-	def get(self, request):
-		request_data = request.json()
-		userid = request_data['account_id']
-		user = Users.objects.get(account_id=userid)
-		if user:
-			return Response({
-				'level' : user.level
-			}, status=status.HTTP_200_OK)
-		return Response({
-			'error' : 'user not found'
-		}, status=status.HTTP_400_BAD_REQUEST)
 
 class GetUser(APIView):
 	permission_classes = (permissions.AllowAny,)
@@ -38,6 +24,7 @@ class GetUser(APIView):
 			)
 			user.save()
 		return Response({
+			'id' : user.id,
 			'account_id' : user.account_id,
 			'first_name' : user.first_name,
 			'last_name' : user.last_name,
@@ -82,8 +69,47 @@ class SetAvatar(APIView):
 			return Response({
 				'error' : 'avatar not found'
 			}, status=status.HTTP_400_BAD_REQUEST)
-		user.avatar_id = avatar.id
+		user.avatar_id = avatar
 		user.save()
 		return Response({
 			'info' : 'avatar changed successfully'
+		}, status=status.HTTP_200_OK)
+
+class AddFriend(APIView):
+	def post(self, request):
+		permission_classes = (permissions.AllowAny,)
+		request_data = request.json()
+		userid1 = request_data['account_id']
+		userid2 = request_data['friend_id']
+		user1 = Users.objects.get(account_id=userid1)
+		user2 = Users.objects.get(account_id=userid2)
+		if not user1 or not user2:
+			return Response({
+				'error' : 'user not found'
+			}, status=status.HTTP_400_BAD_REQUEST)
+		friend = Friendships.objects.get(user_1=user1, user_2=user2)
+		if not friend:
+			friend = Friendships.objects.get(user_1=user2, user_2=user1)
+			if not friend:
+				friend = Friendships.objects.create(
+					user_1 = user1,
+					user_2 = user2,
+					accepted = 'False'
+				)
+				friend.save()
+				return Response({
+					'info' : 'friend request has been sent'
+				}, status=status.HTTP_200_OK)
+			if friend.accepted == 'False':
+				friend.accepted = 'True'
+				friend.save()
+				return Response({
+					'info' : 'friend request has been accepted'
+				}, status=status.HTTP_200_OK)
+		if friend.accepted == 'True':
+			return Response({
+				'info' : 'users are already Friendships'
+			}, status=status.HTTP_200_OK)
+		return Response({
+			'info' : 'friend request is pending'
 		}, status=status.HTTP_200_OK)

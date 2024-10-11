@@ -14,7 +14,7 @@ class Users(models.Model):
     level = models.DecimalField(..., max_digits=6, decimal_places=3)
     avatar_id = models.ForeignKey(Avatars, on_delete=models.SET(0))
 
-class Friends(models.Model):
+class Friendships(models.Model):
     id = models.AutoField(primary_key=True)
     user_1 = models.ForeignKey(Users, on_delete=models.CASCADE)
     user_2 = models.ForeignKey(Users, on_delete=models.CASCADE)
