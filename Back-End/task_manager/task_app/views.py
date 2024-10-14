@@ -3,7 +3,7 @@ from rest_framework.views import APIView
 from rest_framework import permissions, status
 from rest_framework.response import Response
 from .models import Tasks, Categories, Progresses
-import json
+import json, datetime
 
 # Create your views here.
 class GetTask(APIView):
@@ -57,18 +57,29 @@ class GetProgress(APIView):
 			'finish_date' : progress.finish_date
 		}, status=status.HTTP_200_OK)
 
-# class UpdateProgress(APIView):
-# 	permission_classes = (permissions.AllowAny,)
-# 	def post(self, request):
-# 		request_data = request.json()
-# 		progressid = request_data['progress_id']
-# 		score_increment = request_data['score']
-# 		progress = Progresses.objects.get(id=progressid)
-# 		if not progress:
-# 			return Response({
-# 				'error' : 'progress not found'
-# 			}, status=status.HTTP_400_BAD_REQUEST)
-		
+class UpdateProgress(APIView):
+	permission_classes = (permissions.AllowAny,)
+	def post(self, request):
+		request_data = request.json()
+		progressid = request_data['progress_id']
+		rate_increment = request_data['rate']
+		progress = Progresses.objects.get(id=progressid)
+		if not progress:
+			return Response({
+				'error' : 'progress not found'
+			}, status=status.HTTP_400_BAD_REQUEST)
+		progress.rate += rate_increment
+		if progress.rate >= 100:
+			progress.finish_date = datetime.datetime.now()
+		progress.save()
+		if progress.rate >= 100:
+			return Response({
+				'info' : 'task completed',
+				'reward' : Tasks.objects.get(id=progress.task_id.id).exp
+			}, status=status.HTTP_200_OK)
+		return Response({
+			'info' : 'task rate updated to ' + progress.rate,
+		}, status=status.HTTP_200_OK)
 
 class GetTasksByUser(APIView):
 	permission_classes = (permissions.AllowAny,)
