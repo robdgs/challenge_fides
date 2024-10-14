@@ -53,7 +53,21 @@ class SetUser(APIView):
 			'info' : 'changes applied successfully'
 		}, status=status.HTTP_200_OK)
 
-class SetAvatar(APIView):
+class GetAvatar(APIView):
+	def get(self, request):
+		permission_classes = (permissions.AllowAny,)
+		request_data = request.json()
+		avatarid = request_data['id']
+		avatar = Avatars.objects.get(id=avatarid)
+		if not avatar:
+			return Response({
+				'error' : 'avatar not found'
+			}, status=status.HTTP_400_BAD_REQUEST)
+		return Response({
+			'avatar_name' : avatar.name
+		}, status=status.HTTP_200_OK)
+
+class ChooseAvatar(APIView):
 	def post(self, request):
 		permission_classes = (permissions.AllowAny,)
 		request_data = request.json()
@@ -108,7 +122,7 @@ class AddFriend(APIView):
 				}, status=status.HTTP_200_OK)
 		if friend.accepted == 'True':
 			return Response({
-				'info' : 'users are already Friendships'
+				'info' : 'users are already friends'
 			}, status=status.HTTP_200_OK)
 		return Response({
 			'info' : 'friend request is pending'

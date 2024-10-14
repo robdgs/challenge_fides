@@ -3,6 +3,8 @@ from django.conf import settings
 
 class Avatars(models.Model):
     id = models.AutoField(primary_key=True)
+    name = models.CharField(max_length=255)
+    #file = models.FileField()
 
 class Users(models.Model):
     id = models.AutoField(primary_key=True)
