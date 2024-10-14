@@ -6,16 +6,13 @@ from rest_framework import permissions, status
 from .validations import custom_validation, validate_email, validate_password
 from oauth2_provider.contrib.rest_framework import OAuth2Authentication , TokenHasScope, TokenHasReadWriteScope
 from .errors import error_codes
-from datetime import datetime , timedelta
 from oauth2_provider.models import AccessToken , Application, RefreshToken
-from oauth2_provider.settings import oauth2_settings
 from oauthlib.common import generate_token
 from django.http import JsonResponse
 from django.views.decorators.csrf import ensure_csrf_cookie
 from oauth2_provider.views import TokenView
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import login
 from login.settings import client
-from .signals import create_oauth2_application_and_superuser
 from login.settings import SERVICE_PASSWORD
 
 
