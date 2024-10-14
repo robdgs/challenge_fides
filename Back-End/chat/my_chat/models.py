@@ -5,6 +5,7 @@ from django.db import models
 
 class UserProfile(models.Model):
 	username = models.TextField()
+	user_id = models.IntegerField(primary_key=True)
 
 class chat_room(models.Model):
 	room_id = models.AutoField(primary_key=True)
@@ -13,6 +14,7 @@ class chat_room(models.Model):
 	number_of_users = models.IntegerField(default=0)
 	users = models.ManyToManyField(UserProfile)
 	messages = models.ManyToManyField('chat_message')
+	starttime = models.DateTimeField(auto_now_add=True)
 
 class chat_message(models.Model):
 	message_id = models.AutoField(primary_key=True)

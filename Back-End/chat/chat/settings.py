@@ -128,7 +128,14 @@ AUTH_PASSWORD_VALIDATORS = [
         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
 ]
-
+CELERY_BROKER_URL = 'redis://localhost:6379/0'
+CELERY_RESULT_BACKEND = 'redis://localhost:6379/0'
+CELERY_BEAAT_SCHEDULE = {
+	'similar_users_chats': {
+		'task': 'my_chat.tasks.similar_users_chats',
+		'schedule': 3600,
+	},
+}
 
 # Internationalization
 # https://docs.djangoproject.com/en/5.1/topics/i18n/
