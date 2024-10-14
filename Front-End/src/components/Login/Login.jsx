@@ -19,7 +19,7 @@ export default function Login() {
 	};
 
 	return (
-		<div className="global">
+		<div className="login">
 			<div className="login_box">
 				<h1>Login</h1>
 				<div className="login_form">

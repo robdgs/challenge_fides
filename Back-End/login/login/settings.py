@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 
 from pathlib import Path
 import os
+import secrets
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -31,6 +32,8 @@ ALLOWED_HOSTS = ['*']
 
 CORS_ALLOWED_ORIGINS = [
 	"http://localhost:8001",
+	"http://localhost:8000",
+	"http://localhost:3000",
 	"http://127.0.0.1:3000",
 	"http://0.0.0.0'",
 ]
@@ -136,7 +139,8 @@ OAUTH2_PROVIDER = {
 	'ACCESS_TOKEN_EXPIRE_SECONDS': 3600,  # 1 hour
 	'REFRESH_TOKEN_EXPIRE_SECONDS': 86400,  # 1 day
 	'ROTATE_REFRESH_TOKEN': True,
-	'ALLOWED_GRANT_TYPES': ['client_credentials', 'authorization_code', 'password', 'refresh_token'],
+	'ALLOWED_GRANT_TYPES': ['client_credentials', 'authorization_code', 'password', 'refresh_token', 'token'],
+	'SCOPES': {'read': 'Read scope', 'write': 'Write scope', 'groups': 'Access to your groups'},
 }
 
 # Internationalization
@@ -149,7 +153,13 @@ TIME_ZONE = 'UTC'
 USE_I18N = True
 
 USE_TZ = True
+client = {
+	'CLIENT_ID' : '',
+	'CLIENT_SECRET' : '',
+}
 
+client['CLIENT_ID'] = 'fIdyZIRNl-ZdCVxwTs7UtcTfCy_gWVQpR_JMlr9aho8' #.env
+client['CLIENT_SECRET'] = 'OET0Drwd9vtChBjunLvrVfGsf3nCtSOBAmVauPOfMqUkcObkC9_2VFvsfbu-0rDbnz9lD5tpEvGJw5nScsGjGw'
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/

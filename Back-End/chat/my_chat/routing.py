@@ -10,6 +10,5 @@ application = ProtocolTypeRouter({
             URLRouter([
                 path('ws/chat/<room_id>/', ChatConsumer.as_asgi()),
             ])
-        )
     ),
 })

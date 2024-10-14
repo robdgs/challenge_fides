@@ -28,6 +28,9 @@ DEBUG = True
 
 ALLOWED_HOSTS = [
 	'localhost',
+	'http://localhost:3000/home',
+	'http://localhost:3000/login',
+	'http://localhost:3000/register'
 ]
 
 

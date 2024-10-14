@@ -11,7 +11,8 @@ docker
 docker-compose
 ##end
 
-##npm
+##npm da fare nella cartella Front-End
 react
 react-router-dom
+react-use-websocket
 ##fin

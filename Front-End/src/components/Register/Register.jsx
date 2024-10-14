@@ -21,7 +21,7 @@ export default function Login() {
 	};
 
 	return (
-		<div className="global">
+		<div className="register">
 			<div className="login_box">
 				<h1>Register</h1>
 				<div className="login_form">
