@@ -31,7 +31,7 @@ class GetUser(APIView):
 			'birth_date' : user.birth_date,
 			'bio' : user.bio,
 			'level' : user.level,
-			'avatar_id' : user.avatar_id
+			'avatar_id' : user.avatar_id.id
 		}, status=status.HTTP_200_OK)
 
 class SetUser(APIView):
@@ -57,7 +57,7 @@ class GetAvatar(APIView):
 	def get(self, request):
 		permission_classes = (permissions.AllowAny,)
 		request_data = request.json()
-		avatarid = request_data['id']
+		avatarid = request_data['avatar_id']
 		avatar = Avatars.objects.get(id=avatarid)
 		if not avatar:
 			return Response({

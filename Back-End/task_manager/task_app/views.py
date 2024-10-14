@@ -10,7 +10,7 @@ class GetTask(APIView):
 	permission_classes = (permissions.AllowAny,)
 	def get(self, request):
 		request_data = request.json()
-		taskid = request_data['id']
+		taskid = request_data['task_id']
 		task = Tasks.objects.get(id=taskid)
 		if not task:
 			return Response({
@@ -28,7 +28,49 @@ class GetTask(APIView):
 			'next_task' : task.next_task
 		}, status=status.HTTP_200_OK)
 
-class GetUserTasks(APIView):
+class GetProgress(APIView):
+	permission_classes = (permissions.AllowAny,)
+	def get(self, request):
+		request_data = request.json()
+		taskid = request_data['task_id']
+		userid = request_data['account_id']
+		task = Tasks.objects.get(id=taskid)
+		if not task:
+			return Response({
+				'error' : 'task not found'
+			}, status=status.HTTP_400_BAD_REQUEST)
+		progress = progress.objects.get(task_id=taskid, account_id=userid)
+		if not progress:
+			progress = Progresses.objects.create(
+				task_id = task,
+				account_id = userid,
+				rate = 0
+			)
+		progress.save()
+		return Response({
+			'id' : progress.id,
+			'task_id' : progress.task_id.id,
+			'account_id' : progress.account_id,
+			'rate' : progress.rate,
+			'begin_date' : progress.begin_date,
+			'last_modified' : progress.last_modified,
+			'finish_date' : progress.finish_date
+		}, status=status.HTTP_200_OK)
+
+# class UpdateProgress(APIView):
+# 	permission_classes = (permissions.AllowAny,)
+# 	def post(self, request):
+# 		request_data = request.json()
+# 		progressid = request_data['progress_id']
+# 		score_increment = request_data['score']
+# 		progress = Progresses.objects.get(id=progressid)
+# 		if not progress:
+# 			return Response({
+# 				'error' : 'progress not found'
+# 			}, status=status.HTTP_400_BAD_REQUEST)
+		
+
+class GetTasksByUser(APIView):
 	permission_classes = (permissions.AllowAny,)
 	def get(self, request):
 		request_data = request.json()
@@ -41,6 +83,42 @@ class GetUserTasks(APIView):
 		if answer == '':
 			return Response({
 				'error' : 'user has begun no tasks'
+			}, status=status.HTTP_400_BAD_REQUEST)
+		return Response({
+			'task_ids' : answer
+		}, status=status.HTTP_400_BAD_REQUEST)
+
+class GetUsersByTask(APIView):
+	permission_classes = (permissions.AllowAny,)
+	def get(self, request):
+		request_data = request.json()
+		taskid = request_data['task_id']
+		progress = Progresses.objects.all()
+		answer = ''
+		for x in progress:
+			if x.task_id == taskid:
+				answer += x.account_id + ' '
+		if answer == '':
+			return Response({
+				'error' : 'task is joined by no user'
+			}, status=status.HTTP_400_BAD_REQUEST)
+		return Response({
+			'account_ids' : answer
+		}, status=status.HTTP_400_BAD_REQUEST)
+
+class GetTasksByCategory(APIView):
+	permission_classes = (permissions.AllowAny,)
+	def get(self, request):
+		request_data = request.json()
+		categoryid = request_data['category_id']
+		task = Tasks.objects.all()
+		answer = ''
+		for x in task:
+			if x.category_id.id == categoryid:
+				answer += x.id + ' '
+		if answer == '':
+			return Response({
+				'error' : 'no task for this category'
 			}, status=status.HTTP_400_BAD_REQUEST)
 		return Response({
 			'task_ids' : answer
