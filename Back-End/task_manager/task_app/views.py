@@ -18,6 +18,7 @@ class GetTask(APIView):
 			}, status=status.HTTP_400_BAD_REQUEST)
 		return Response({
 			'id' : task.id,
+			'author_id' : task.author_id,
 			'name' : task.name,
 			'description' : task.description,
 			'duration' : task.duration,
@@ -26,3 +27,21 @@ class GetTask(APIView):
 			'previous_task' : task.previous_task,
 			'next_task' : task.next_task
 		}, status=status.HTTP_200_OK)
+
+class GetUserTasks(APIView):
+	permission_classes = (permissions.AllowAny,)
+	def get(self, request):
+		request_data = request.json()
+		userid = request_data['account_id']
+		progress = Progresses.objects.all()
+		answer = ''
+		for x in progress:
+			if x.account_id == userid:
+				answer += x.task_id + ' '
+		if answer == '':
+			return Response({
+				'error' : 'user has begun no tasks'
+			}, status=status.HTTP_400_BAD_REQUEST)
+		return Response({
+			'task_ids' : answer
+		}, status=status.HTTP_400_BAD_REQUEST)

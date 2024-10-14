@@ -127,3 +127,32 @@ class AddFriend(APIView):
 		return Response({
 			'info' : 'friend request is pending'
 		}, status=status.HTTP_200_OK)
+
+class GetFriendList(APIView):
+	permission_classes = (permissions.AllowAny,)
+	def get(self, request):
+		request_data = request.json()
+		userid = request_data['account_id']
+		user = Users.objects.get(account_id=userid)
+		if not user:
+			return Response({
+				'error' : 'user not found'
+			}, status=status.HTTP_400_BAD_REQUEST)
+		friends = Friendships.objects.all()
+		answer1 = ''
+		answer2 = ''
+		for x in friends:
+			if x.user_1.account_id == userid:
+				if x.accepted is True:
+					answer1 += x.user_2.account_id + ' '
+				else:
+					answer2 += x.user_2.account_id + ' '
+			elif x.user_2.account_id == userid:
+				if x.accepted is True:
+					answer1 += x.user_1.account_id + ' '
+				else:
+					answer2 += x.user_1.account_id + ' '
+		return Response({
+			'friends' : answer1,
+			'pendings' : answer2
+		}, status=status.HTTP_200_OK)

@@ -9,6 +9,7 @@ class Categories(models.Model):
 
 class Tasks(models.Model):
 	id = models.AutoField(primary_key=True)
+	author_id = models.IntegerField()
 	name = models.CharField(max_length=255)
 	description = models.TextField()
 	duration = models.TimeField()
