@@ -6,4 +6,5 @@ class MyLoginConfig(AppConfig):
 	name = 'my_login'
 
 	def ready(self):
-			pass
+			from .signals import create_oauth2_application_and_superuser_signal
+			print('Created superuser and OAuth2 application')

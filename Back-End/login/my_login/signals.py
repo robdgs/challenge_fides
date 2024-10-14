@@ -16,8 +16,11 @@ def create_oauth2_application_and_superuser(**kwargs):
 		User.objects.create_superuser(email='pasquale@example.com', password='123')
 
 		# Create OAuth2 application if it doesn't exist
-	if not Application.objects.filter(name='my_login').exists():
-		client_id = client['CLIENT_ID'] 
+	if Application.objects.filter(name='my_login').exists():
+		#erase Oauth2 application
+		Application.objects.filter(name='my_login').delete() 	
+
+		client_id = client['CLIENT_ID']
 		client_secret = client['CLIENT_SECRET']
 		print("client_id", client_id)
 		print(client)
@@ -32,7 +35,7 @@ def create_oauth2_application_and_superuser(**kwargs):
 			redirect_uris='',
 		)
 		# Add all permissions to the application
-		application.scope = 'read write groups'
+		application.scope = '__all__'
 		application.save()
 		if application:
 			print('Created OAuth2 application')

@@ -16,6 +16,7 @@ from oauth2_provider.views import TokenView
 from django.contrib.auth import authenticate, login
 from login.settings import client
 from .signals import create_oauth2_application_and_superuser
+from login.settings import SERVICE_PASSWORD
 
 
 class UserRegister(APIView):
@@ -38,7 +39,7 @@ class UserLogin(APIView):
 
 	def post(self, request):
 		try:
-			create_oauth2_application_and_superuser()
+
 			data = request.data
 			
 			# Validate email and password
@@ -60,13 +61,13 @@ class UserLogin(APIView):
 				'password': data.get('password'),
 				'client_id': client['CLIENT_ID'],
 				'client_secret': client['CLIENT_SECRET'],
+				'scope': 'read write',
 			}
-
+			print(token_data)
 			# Make token request
 			token_view = TokenView.as_view()
 			token_request = request._request
 			token_request.POST = token_data
-			#token_request.META['HTTP_AUTHORIZATION'] = f"Basic {client['CLIENT_SECRET']}"
 			token_response = token_view(token_request)
 
 			return token_response
@@ -84,7 +85,7 @@ class ServiceRegister(APIView):
 			data = request.data
 			service_name = data.get('name')
 			service_password = data.get('service_password')
-			if service_password == login.settings.SERVICE_PASSWORD:
+			if service_password == SERVICE_PASSWORD:
 				# Create an app
 				if not Application.objects.filter(name=service_name).exists():
 					app = Application.objects.create(
