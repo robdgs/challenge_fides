@@ -1,60 +1,75 @@
 import json
-from channels.generic.websocket import AsyncWebsocketConsumer
+from channels.generic.websocket import AsyncConsumer
+from my_chat.models import UserProfile , chat_room , chat_message
+from .user_services import register_user
 
-class ChatConsumer(AsyncWebsocketConsumer):
-    async def connect(self):
-        self.room_id = self.scope['url_route']['kwargs']['room_id']
-        self.room_group_name = f'chat_{self.room_id}'
-        user = self.scope["user"]
+class ChatConsumer(AsyncConsumer):
+	async def connect(self):
+		user = self.scope["user"]
+		if user.is_authenticated:
+			await self.accept()
+		else:
+			# add the user to the database
+			await register_user(user.username)
+			await self.accept()
+	
+	async def disconnect(self, close_code):
+		pass
 
-        if user.is_authenticated:
-            # Join room group
-            await self.channel_layer.group_add(
-                self.room_group_name,
-                self.channel_name
-            )
-            await self.accept()
-        else:
-            await self.close()
+	async def receive(self, text_data):
+		text_data_json = json.loads(text_data)
+		message = text_data_json['message']
+		room_id = text_data_json['room_id']
+		sender = text_data_json['sender']
+		timestamp = text_data_json['timestamp']
 
-    async def disconnect(self, close_code):
-        # Leave room group
-        await self.channel_layer.group_discard(
-            self.room_group_name,
-            self.channel_name
-        )
+		# Save message to database
+		message = chat_message.objects.create(
+			room_id=room_id,
+			message=message,
+			sender=sender,
+			timestamp=timestamp
+		)
+		message.save()
+		# Add message to room
+		
 
-    # Receive message from WebSocket
-    async def receive(self, text_data):
-        text_data_json = json.loads(text_data)
-        message = text_data_json['message']
-        room_id = text_data_json['room_id']
-        user_id = text_data_json['user_id']
-        sender = text_data_json['sender']
+		# Send message to room
 
-        # Send message to room group
-        await self.channel_layer.group_send(
-            self.room_group_name,
-            {
-                'type': 'chat_message',
-                'message': message,
-                'room_id': room_id,
-                'user_id': user_id,
-                'sender': sender
-            }
-        )
 
-    # Receive message from room group
-    async def chat_message(self, event):
-        message = event['message']
-        room_id = event['room_id']
-        user_id = event['user_id']
-        sender = event['sender']
+		await self.send(text_data=json.dumps({
+			'message': message,
+			'room_id': room_id,
+			'timestamp': timestamp,
+			'sender': sender
+		}))
+	async def chat_message(self, event):
+		message = event['message']
+		room_id = event['room_id']
+		user_id = event['user_id']
+		sender = event['sender']
 
-        # Send message to WebSocket
-        await self.send(text_data=json.dumps({
-            'message': message,
-            'room_id': room_id,
-            'user_id': user_id,
-            'sender': sender
-        }))
+		await self.send(text_data=json.dumps({
+			'message': message,
+			'room_id': room_id,
+			'user_id': user_id,
+			'sender': sender
+		}))
+
+	async def join_room(self, event):
+		room_id = event['room_id']
+		user_id = event['user_id']
+
+		await self.send(text_data=json.dumps({
+			'room_id': room_id,
+			'user_id': user_id
+		}))
+
+	async def leave_room(self, event):
+		room_id = event['room_id']
+		user_id = event['user_id']
+
+		await self.send(text_data=json.dumps({
+			'room_id': room_id,
+			'user_id': user_id
+		}))

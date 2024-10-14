@@ -3,26 +3,25 @@ from django.db import models
 
 # Create your models here.
 
-class user(models.Model):
-	user_id = models.IntegerField()
+class UserProfile(models.Model):
 	username = models.TextField()
+	user_id = models.IntegerField(primary_key=True)
 
 class chat_room(models.Model):
+	room_id = models.AutoField(primary_key=True)
 	room_name = models.CharField(max_length=100)
-	room_id = models.IntegerField()
 	room_description = models.TextField()
 	number_of_users = models.IntegerField(default=0)
-	users = models.ManyToManyField(user)
+	users = models.ManyToManyField(UserProfile)
 	messages = models.ManyToManyField('chat_message')
+	starttime = models.DateTimeField(auto_now_add=True)
 
 class chat_message(models.Model):
+	message_id = models.AutoField(primary_key=True)
 	room_id = models.ForeignKey(chat_room, on_delete=models.CASCADE)
-	user_id = models.TextField()
 	message = models.TextField()
 	sender = models.TextField()
 	timestamp = models.DateTimeField(auto_now_add=True)
 
 def get_user_model(id):
 	return User.objects.get(id=id)
-
-#get_user_model().id = models.ForeignKey(User, on_delete=models.CASCADE)
