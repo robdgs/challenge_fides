@@ -20,7 +20,7 @@ class GetUser(APIView):
 				birth_date='0000-00-00',
 				bio='',
 				level=0,
-				avatar_id=-1,
+				avatar_id=-1
 			)
 			user.save()
 		return Response({
@@ -31,7 +31,7 @@ class GetUser(APIView):
 			'birth_date' : user.birth_date,
 			'bio' : user.bio,
 			'level' : user.level,
-			'avatar_id' : user.avatar_id,
+			'avatar_id' : user.avatar_id
 		}, status=status.HTTP_200_OK)
 
 class SetUser(APIView):
@@ -64,7 +64,7 @@ class GetAvatar(APIView):
 				'error' : 'avatar not found'
 			}, status=status.HTTP_400_BAD_REQUEST)
 		return Response({
-			'avatar_name' : avatar.name
+			'name' : avatar.name
 		}, status=status.HTTP_200_OK)
 
 class ChooseAvatar(APIView):
@@ -108,19 +108,19 @@ class AddFriend(APIView):
 				friend = Friendships.objects.create(
 					user_1 = user1,
 					user_2 = user2,
-					accepted = 'False'
+					accepted = False
 				)
 				friend.save()
 				return Response({
 					'info' : 'friend request has been sent'
 				}, status=status.HTTP_200_OK)
-			if friend.accepted == 'False':
-				friend.accepted = 'True'
+			if friend.accepted is False:
+				friend.accepted = True
 				friend.save()
 				return Response({
 					'info' : 'friend request has been accepted'
 				}, status=status.HTTP_200_OK)
-		if friend.accepted == 'True':
+		if friend.accepted is True:
 			return Response({
 				'info' : 'users are already friends'
 			}, status=status.HTTP_200_OK)
