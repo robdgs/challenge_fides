@@ -14,13 +14,13 @@ class Tasks(models.Model):
 	description = models.TextField()
 	duration = models.TimeField()
 	exp = models.IntegerField()
-	category_id = models.ForeignKey(Categories, on_delete=models.SET(0))
+	category = models.ForeignKey(Categories, on_delete=models.SET(0))
 	# previous_task = models.ForeignKey('Tasks', on_delete=models.SET(0))
 	# next_task = models.ForeignKey('Tasks', on_delete=models.SET(0))
 
 class Progresses(models.Model):
 	id = models.AutoField(primary_key=True)
-	task_id = models.ForeignKey(Categories, on_delete=models.CASCADE)
+	task = models.ForeignKey(Categories, on_delete=models.CASCADE)
 	account_id = models.IntegerField()
 	rate = models.DecimalField(max_digits=6, decimal_places=3)
 	begin_date = models.DateTimeField(auto_now_add=True)

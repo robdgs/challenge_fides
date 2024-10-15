@@ -41,7 +41,7 @@ class GetTask(APIView):
 			'description' : task.description,
 			'duration' : task.duration,
 			'exp' : task.exp,
-			'category' : task.category_id,
+			'category' : task.category,
 			# 'previous_task' : task.previous_task.id,
 			# 'next_task' : task.next_task.id
 		}, status=status.HTTP_200_OK)
@@ -52,22 +52,22 @@ class GetProgress(APIView):
 		request_data = request.data()
 		taskid = request_data['task_id']
 		userid = request_data['account_id']
-		task = Tasks.objects.get(id=taskid)
-		if not task:
+		ttask = Tasks.objects.get(id=taskid)
+		if not ttask:
 			return Response({
 				'error' : 'task not found'
 			}, status=status.HTTP_400_BAD_REQUEST)
-		progress = progress.objects.get(task_id=taskid, account_id=userid)
+		progress = progress.objects.get(task=taskid, account_id=userid)
 		if not progress:
 			progress = Progresses.objects.create(
-				task_id = task,
+				task = ttask,
 				account_id = userid,
 				rate = 0
 			)
 		progress.save()
 		return Response({
 			'id' : progress.id,
-			'task_id' : progress.task_id.id,
+			'task_id' : progress.task.id,
 			'account_id' : progress.account_id,
 			'rate' : progress.rate,
 			'begin_date' : progress.begin_date,
@@ -93,7 +93,7 @@ class UpdateProgress(APIView):
 		if progress.rate >= 100:
 			return Response({
 				'info' : 'task completed',
-				'reward' : Tasks.objects.get(id=progress.task_id.id).exp
+				'reward' : Tasks.objects.get(id=progress.task.id).exp
 			}, status=status.HTTP_200_OK)
 		return Response({
 			'info' : 'task rate updated to ' + progress.rate,
@@ -108,7 +108,7 @@ class GetTasksByUser(APIView):
 		answer = ''
 		for x in progress:
 			if x.account_id == userid:
-				answer += x.task_id + ' '
+				answer += x.task.id + ' '
 		if answer == '':
 			return Response({
 				'error' : 'user has begun no tasks'
@@ -143,7 +143,7 @@ class GetTasksByCategory(APIView):
 		task = Tasks.objects.all()
 		answer = ''
 		for x in task:
-			if x.category_id.id == categoryid:
+			if x.category.id == categoryid:
 				answer += x.id + ' '
 		if answer == '':
 			return Response({
@@ -157,12 +157,12 @@ class GetUsersForEachTask(APIView):
 	permission_classes = (permissions.AllowAny,)
 	def get(self, request):
 		progress = Progresses.objects.all()
-		task = Tasks.objects.all()
+		ttask = Tasks.objects.all()
 		answer = {}
-		for x in task:
+		for x in ttask:
 			arg = ''
 			for y in progress:
-				if y.task_id.id == x.id:
+				if y.task.id == x.id:
 					arg += y.account_id + ' '
 			answer[x.id] = arg
 		jsn_return = json.dumps(answer)
