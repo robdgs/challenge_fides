@@ -153,6 +153,6 @@ class GetFriendList(APIView):
 				else:
 					answer2 += x.user_1.account_id + ' '
 		return Response({
-			'friends' : answer1,
-			'pendings' : answer2
+			'friends_ids' : answer1,
+			'pendings_ids' : answer2
 		}, status=status.HTTP_200_OK)

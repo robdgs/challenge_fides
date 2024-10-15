@@ -115,7 +115,7 @@ class GetTasksByUser(APIView):
 			}, status=status.HTTP_400_BAD_REQUEST)
 		return Response({
 			'task_ids' : answer
-		}, status=status.HTTP_400_BAD_REQUEST)
+		}, status=status.HTTP_200_OK)
 
 class GetUsersByTask(APIView):
 	permission_classes = (permissions.AllowAny,)
@@ -133,7 +133,7 @@ class GetUsersByTask(APIView):
 			}, status=status.HTTP_400_BAD_REQUEST)
 		return Response({
 			'account_ids' : answer
-		}, status=status.HTTP_400_BAD_REQUEST)
+		}, status=status.HTTP_200_OK)
 
 class GetTasksByCategory(APIView):
 	permission_classes = (permissions.AllowAny,)
@@ -151,4 +151,21 @@ class GetTasksByCategory(APIView):
 			}, status=status.HTTP_400_BAD_REQUEST)
 		return Response({
 			'task_ids' : answer
-		}, status=status.HTTP_400_BAD_REQUEST)
+		}, status=status.HTTP_200_OK)
+
+class GetUsersForEachTask(APIView):
+	permission_classes = (permissions.AllowAny,)
+	def get(self, request):
+		request_data = request.json()
+		progress = Progresses.objects.all()
+		task = Tasks.objects.all()
+		answer = {}
+		for x in task:
+			arg = ''
+			for y in progress:
+				if y.task_id.id == x.id:
+					arg += y.account_id + ' '
+			answer[x.id] = arg
+		jsn_return = json.dumps(answer)
+		return Response(jsn_return, status=status.HTTP_200_OK)
+		
