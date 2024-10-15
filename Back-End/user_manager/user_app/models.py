@@ -14,7 +14,7 @@ class Users(models.Model):
     birth_date = models.DateField()
     bio = models.TextField()
     level = models.DecimalField(..., max_digits=6, decimal_places=3)
-    avatar_id = models.ForeignKey(Avatars, on_delete=models.SET(0))
+    avatar = models.ForeignKey(Avatars, on_delete=models.SET(0))
     last_modified = models.DateTimeField(auto_now=True)
 
 class Friendships(models.Model):

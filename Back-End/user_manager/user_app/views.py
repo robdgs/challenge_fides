@@ -31,12 +31,12 @@ class GetUser(APIView):
 			'birth_date' : user.birth_date,
 			'bio' : user.bio,
 			'level' : user.level,
-			'avatar_id' : user.avatar_id.id
+			'avatar_id' : user.avatar
 		}, status=status.HTTP_200_OK)
 
 class SetUser(APIView):
+	permission_classes = (permissions.AllowAny,)
 	def post(self, request):
-		permission_classes = (permissions.AllowAny,)
 		request_data = request.json()
 		userid = request_data['account_id']
 		user = Users.objects.get(account_id=userid)
@@ -54,8 +54,8 @@ class SetUser(APIView):
 		}, status=status.HTTP_200_OK)
 
 class GetAvatar(APIView):
+	permission_classes = (permissions.AllowAny,)
 	def get(self, request):
-		permission_classes = (permissions.AllowAny,)
 		request_data = request.json()
 		avatarid = request_data['avatar_id']
 		avatar = Avatars.objects.get(id=avatarid)
@@ -68,8 +68,8 @@ class GetAvatar(APIView):
 		}, status=status.HTTP_200_OK)
 
 class ChooseAvatar(APIView):
+	permission_classes = (permissions.AllowAny,)
 	def post(self, request):
-		permission_classes = (permissions.AllowAny,)
 		request_data = request.json()
 		userid = request_data['account_id']
 		avatarid = request_data['avatar_id']
@@ -83,15 +83,15 @@ class ChooseAvatar(APIView):
 			return Response({
 				'error' : 'avatar not found'
 			}, status=status.HTTP_400_BAD_REQUEST)
-		user.avatar_id = avatar
+		user.avatar = avatar
 		user.save()
 		return Response({
 			'info' : 'avatar changed successfully'
 		}, status=status.HTTP_200_OK)
 
 class AddFriend(APIView):
+	permission_classes = (permissions.AllowAny,)
 	def post(self, request):
-		permission_classes = (permissions.AllowAny,)
 		request_data = request.json()
 		userid1 = request_data['account_id']
 		userid2 = request_data['friend_id']
