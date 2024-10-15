@@ -9,7 +9,7 @@ import json, datetime
 class GetCategory(APIView):
 	permission_classes = (permissions.AllowAny,)
 	def get(self, request):
-		request_data = request.json()
+		request_data = request.data()
 		categoryid = request_data['category_id']
 		category = Categories.objects.get(id=categoryid)
 		if not category:
@@ -27,8 +27,8 @@ class GetCategory(APIView):
 class GetTask(APIView):
 	permission_classes = (permissions.AllowAny,)
 	def get(self, request):
-		request_data = request.json()
-		taskid = request_data['task_id']
+		# request_data = request.data()
+		taskid = request.query_params.get('task_id')
 		task = Tasks.objects.get(id=taskid)
 		if not task:
 			return Response({
@@ -42,14 +42,14 @@ class GetTask(APIView):
 			'duration' : task.duration,
 			'exp' : task.exp,
 			'category' : task.category_id,
-			'previous_task' : task.previous_task,
-			'next_task' : task.next_task
+			# 'previous_task' : task.previous_task.id,
+			# 'next_task' : task.next_task.id
 		}, status=status.HTTP_200_OK)
 
 class GetProgress(APIView):
 	permission_classes = (permissions.AllowAny,)
 	def get(self, request):
-		request_data = request.json()
+		request_data = request.data()
 		taskid = request_data['task_id']
 		userid = request_data['account_id']
 		task = Tasks.objects.get(id=taskid)
@@ -78,7 +78,7 @@ class GetProgress(APIView):
 class UpdateProgress(APIView):
 	permission_classes = (permissions.AllowAny,)
 	def post(self, request):
-		request_data = request.json()
+		request_data = request.data()
 		progressid = request_data['progress_id']
 		rate_increment = request_data['rate']
 		progress = Progresses.objects.get(id=progressid)
@@ -102,7 +102,7 @@ class UpdateProgress(APIView):
 class GetTasksByUser(APIView):
 	permission_classes = (permissions.AllowAny,)
 	def get(self, request):
-		request_data = request.json()
+		request_data = request.data()
 		userid = request_data['account_id']
 		progress = Progresses.objects.all()
 		answer = ''
@@ -120,7 +120,7 @@ class GetTasksByUser(APIView):
 class GetUsersByTask(APIView):
 	permission_classes = (permissions.AllowAny,)
 	def get(self, request):
-		request_data = request.json()
+		request_data = request.data()
 		taskid = request_data['task_id']
 		progress = Progresses.objects.all()
 		answer = ''
@@ -138,7 +138,7 @@ class GetUsersByTask(APIView):
 class GetTasksByCategory(APIView):
 	permission_classes = (permissions.AllowAny,)
 	def get(self, request):
-		request_data = request.json()
+		request_data = request.data()
 		categoryid = request_data['category_id']
 		task = Tasks.objects.all()
 		answer = ''
