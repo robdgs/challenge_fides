@@ -15,8 +15,8 @@ class Tasks(models.Model):
 	duration = models.TimeField()
 	exp = models.IntegerField()
 	category_id = models.ForeignKey(Categories, on_delete=models.SET(0))
-	previous_task = models.ForeignKey('Tasks', on_delete=models.SET(0))
-	next_task = models.ForeignKey('Tasks', on_delete=models.SET(0))
+	# previous_task = models.ForeignKey('Tasks', on_delete=models.SET(0))
+	# next_task = models.ForeignKey('Tasks', on_delete=models.SET(0))
 
 class Progresses(models.Model):
 	id = models.AutoField(primary_key=True)
