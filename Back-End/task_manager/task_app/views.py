@@ -27,8 +27,8 @@ class GetCategory(APIView):
 class GetTask(APIView):
 	permission_classes = (permissions.AllowAny,)
 	def get(self, request):
-		# request_data = request.data()
-		taskid = request.query_params.get('task_id')
+		request_data = json.dumps(request)
+		taskid = request_data['task_id']
 		task = Tasks.objects.get(id=taskid)
 		if not task:
 			return Response({

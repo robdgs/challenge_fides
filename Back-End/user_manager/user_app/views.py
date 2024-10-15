@@ -9,7 +9,7 @@ import json
 class GetUser(APIView):
 	permission_classes = (permissions.AllowAny,)
 	def get(self, request):
-		request_data = request.json()
+		request_data = request.data()
 		userid = request_data['account_id']
 		user = Users.objects.get(account_id=userid)
 		if not user:
@@ -37,7 +37,7 @@ class GetUser(APIView):
 class SetUser(APIView):
 	permission_classes = (permissions.AllowAny,)
 	def post(self, request):
-		request_data = request.json()
+		request_data = request.data()
 		userid = request_data['account_id']
 		user = Users.objects.get(account_id=userid)
 		if not user:
@@ -56,7 +56,7 @@ class SetUser(APIView):
 class GetAvatar(APIView):
 	permission_classes = (permissions.AllowAny,)
 	def get(self, request):
-		request_data = request.json()
+		request_data = request.data()
 		avatarid = request_data['avatar_id']
 		avatar = Avatars.objects.get(id=avatarid)
 		if not avatar:
@@ -70,7 +70,7 @@ class GetAvatar(APIView):
 class ChooseAvatar(APIView):
 	permission_classes = (permissions.AllowAny,)
 	def post(self, request):
-		request_data = request.json()
+		request_data = request.data()
 		userid = request_data['account_id']
 		avatarid = request_data['avatar_id']
 		user = Users.objects.get(account_id=userid)
@@ -92,7 +92,7 @@ class ChooseAvatar(APIView):
 class AddFriend(APIView):
 	permission_classes = (permissions.AllowAny,)
 	def post(self, request):
-		request_data = request.json()
+		request_data = request.data()
 		userid1 = request_data['account_id']
 		userid2 = request_data['friend_id']
 		user1 = Users.objects.get(account_id=userid1)
@@ -131,7 +131,7 @@ class AddFriend(APIView):
 class GetFriendList(APIView):
 	permission_classes = (permissions.AllowAny,)
 	def get(self, request):
-		request_data = request.json()
+		request_data = request.data()
 		userid = request_data['account_id']
 		user = Users.objects.get(account_id=userid)
 		if not user:
