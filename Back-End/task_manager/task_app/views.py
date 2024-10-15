@@ -6,6 +6,24 @@ from .models import Tasks, Categories, Progresses
 import json, datetime
 
 # Create your views here.
+class GetCategory(APIView):
+	permission_classes = (permissions.AllowAny,)
+	def get(self, request):
+		request_data = request.json()
+		categoryid = request_data['category_id']
+		category = Categories.objects.get(id=categoryid)
+		if not category:
+			category = Categories.objects.create(
+				name = request_data['name'],
+				description = request_data['description']
+			)
+			category.save()
+		return Response({
+			'id' : category.id,
+			'name' : category.name,
+			'description' : category.description
+		}, status=status.HTTP_200_OK)
+
 class GetTask(APIView):
 	permission_classes = (permissions.AllowAny,)
 	def get(self, request):
