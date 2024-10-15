@@ -31,12 +31,7 @@ class ChatConsumer(AsyncConsumer):
 			timestamp=timestamp
 		)
 		message.save()
-		# Add message to room
-		
-
 		# Send message to room
-
-
 		await self.send(text_data=json.dumps({
 			'message': message,
 			'room_id': room_id,

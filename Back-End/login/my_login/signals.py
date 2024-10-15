@@ -18,7 +18,7 @@ def create_oauth2_application_and_superuser(**kwargs):
 		# Create OAuth2 application if it doesn't exist
 	if Application.objects.filter(name='my_login').exists():
 		#erase Oauth2 application
-		Application.objects.filter(name='my_login').delete() 	
+		Application.objects.filter(name='my_login').delete()
 
 		client_id = client['CLIENT_ID']
 		client_secret = client['CLIENT_SECRET']

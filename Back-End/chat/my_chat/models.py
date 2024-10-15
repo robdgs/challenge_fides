@@ -13,7 +13,6 @@ class chat_room(models.Model):
 	room_description = models.TextField()
 	number_of_users = models.IntegerField(default=0)
 	users = models.ManyToManyField(UserProfile)
-	messages = models.ManyToManyField('chat_message')
 	starttime = models.DateTimeField(auto_now_add=True)
 
 class chat_message(models.Model):
@@ -24,4 +23,4 @@ class chat_message(models.Model):
 	timestamp = models.DateTimeField(auto_now_add=True)
 
 def get_user_model(id):
-	return User.objects.get(id=id)
+	return User.objects.get(user_id=id)
