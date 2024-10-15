@@ -156,7 +156,6 @@ class GetTasksByCategory(APIView):
 class GetUsersForEachTask(APIView):
 	permission_classes = (permissions.AllowAny,)
 	def get(self, request):
-		request_data = request.json()
 		progress = Progresses.objects.all()
 		task = Tasks.objects.all()
 		answer = {}
