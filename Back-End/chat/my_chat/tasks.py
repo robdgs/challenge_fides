@@ -7,9 +7,18 @@ from .models import chat_room, UserProfile
 from chat.settings import bufet_url
 
 def get_users():
-	# Get all task for the endpoint
+	# Get all users from the endpoint
 	response = requests.get(bufet_url)
-
+	users_data = response.json()
+	users = []
+	for user_data in users_data:
+		user_id = user_data['user_id']
+		task_ids = user_data['task_ids']
+		user_profile = UserProfile.objects.get(id=user_id)
+		user_profile.tasks = task_ids
+		users.append(user_profile)
+	
+	return users
 
 @shared_task
 def create_chat_room():
