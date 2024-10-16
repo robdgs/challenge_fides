@@ -3,7 +3,7 @@ from . import views
 
 urlpatterns = [
 	path('category', views.GetCategory.as_view(), name='category'),
-	path('task', views.GetTask.as_view(), name='task'),
+	path('task', views.ManageTask.as_view(), name='task'),
 	path('progress', views.GetProgress.as_view(), name='progress'),
 	path('progress_update', views.UpdateProgress.as_view(), name='progress_update'),
 	path('tasks_by_user', views.GetTasksByUser.as_view(), name='task_by_user'),

@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 	'task_app',
+	'rest_framework'
 ]
 
 MIDDLEWARE = [
@@ -81,7 +82,7 @@ DATABASES = {
 		'USER': 'pasquale',
 		'PASSWORD' : '123',
 		'HOST': 'localhost',
-		'PORT': '5437',
+		'PORT': '5434',
 	},
     'backup': {
         'ENGINE': 'django.db.backends.sqlite3',
