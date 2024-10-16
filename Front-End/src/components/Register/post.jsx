@@ -17,7 +17,7 @@ export const onHandleSubmit = async (e, username, email, password, navigate) => 
         const data = await response.json();
         console.log('Risposta dal server:', data);
         // Gestisci la risposta del server, ad esempio, naviga a un'altra pagina
-        navigate('/home');
+        navigate('/login');
       } else {
 				const errorData = await response.json();
 				console.error('Errore nella risposta del server:', errorData.error);
