@@ -3,7 +3,7 @@ from rest_framework.views import APIView
 from rest_framework import permissions, status
 from rest_framework.response import Response
 from .models import Tasks, Categories, Progresses
-from .serializer import TasksSerializer, TaskIDSerializer, CategoriesSerializer ,ProgressesSerializer
+from .serializer import TaskSerializer, TaskGenSerializer, CategoriesSerializer ,ProgressesSerializer
 import json, datetime
 
 # Create your views here.
@@ -29,14 +29,10 @@ class ManageTask(APIView):
 	permission_classes = (permissions.AllowAny,)
 	def get(self, request):
 		try:
-			request_data = TasksSerializer(data=request.data)
+			request_data = TaskSerializer(data=request.data)
 			if request_data.is_valid():
 				taskid = request_data['id'].value
 				task = Tasks.objects.get(id=taskid)
-				if not task:
-					return Response({
-						'error' : 'task not found'
-					}, status=status.HTTP_400_BAD_REQUEST)
 				return Response({
 					'id' : task.id,
 					'author_id' : task.author_id,
@@ -57,17 +53,26 @@ class ManageTask(APIView):
 			return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
 	def post(self, request):
 		try:
-			request_data = TasksSerializer(data=request.data)
+			request_data = TaskSerializer(data=request.data)
 			if request_data.is_valid():
 				taskid = request_data['id'].value
 				categoryid = request_data['category'].value
-				task = Tasks.objects.get(id=taskid)
+				tasks = Tasks.objects.all()
 				category = Categories.objects.get(id=categoryid)
-				if not category:
-					return Response({
-						'error' : 'category not found'
-					}, status=status.HTTP_400_BAD_REQUEST)
-				if not task:
+				for x in tasks:
+					if x.id == taskid:
+						x.author_id = request_data['author_id'].value
+						x.name = request_data['name'].value
+						x.description = request_data['description'].value
+						x.duration = request_data['duration'].value
+						x.exp = request_data['exp'].value
+						x.category = category
+						x.save()
+						return Response({
+							'info' : 'task ' + task.name + ' modified successfully'
+						}, status=status.HTTP_200_OK)
+				request_data = TaskGenSerializer(data=request.data)
+				if request_data.is_valid():
 					task = Tasks.objects.create(
 						author_id = request_data['author_id'].value,
 						name = request_data['name'].value,
@@ -77,18 +82,8 @@ class ManageTask(APIView):
 						category = category,
 					)
 					task.save()
-					return Response({
-						'info' : 'task ' + task.name + ' created successfully'
-					}, status=status.HTTP_200_OK)
-				task.author_id = request_data['author_id'].value
-				task.name = request_data['name'].value
-				task.description = request_data['description'].value
-				task.duration = request_data['duration'].value
-				task.exp = request_data['exp'].value
-				task.category = category
-				task.save()
 				return Response({
-						'info' : 'task ' + task.name + ' modified successfully'
+					'info' : 'task ' + task.name + ' created successfully'
 				}, status=status.HTTP_200_OK)
 		except Exception as e:
 			print(str(e))

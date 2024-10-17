@@ -76,7 +76,15 @@ WSGI_APPLICATION = 'user_manager.wsgi.application'
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
 DATABASES = {
-    'default': {
+	'default': {
+		'ENGINE': 'django.db.backends.postgresql',
+		'NAME': 'user_db',
+		'USER': 'pasquale',
+		'PASSWORD' : '123',
+		'HOST': 'localhost',
+		'PORT': '5437',
+	},
+    'backup': {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': BASE_DIR / 'db.sqlite3',
     }

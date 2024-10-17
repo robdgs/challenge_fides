@@ -6,25 +6,31 @@ class CategoriesSerializer(serializers.ModelSerializer):
 		model = Categories
 		fields = '__all__'
 
-class TasksSerializer(serializers.ModelSerializer):
+class TaskGenSerializer(serializers.ModelSerializer):
 	id = serializers.IntegerField()
 	author_id = serializers.IntegerField()
 	name = serializers.CharField()
 	description = serializers.CharField()
 	duration = serializers.TimeField()
 	exp = serializers.IntegerField()
-	category = serializers.IntegerField()
+	category = serializers.PrimaryKeyRelatedField()
 	class Meta:
 		model = Tasks
 		fields = ['id', 'author_id', 'name', 'description', 'duration', 'exp', 'category']
+
+class TaskSerializer(serializers.ModelSerializer):
+	id = serializers.IntegerField()
+	author_id = serializers.IntegerField()
+	name = serializers.CharField()
+	description = serializers.CharField()
+	duration = serializers.TimeField()
+	exp = serializers.IntegerField()
+	category = serializers.PrimaryKeyRelatedField()
+	class Meta:
+		model = Tasks
+		fields = ['id']
 
 class ProgressesSerializer(serializers.ModelSerializer):
 	class Meta:
 		model = Progresses
 		fields = '__all__'
-
-class TaskIDSerializer(serializers.ModelSerializer):
-	id = serializers.IntegerField()
-	class Meta:
-		model = Tasks
-		fields = ['id']
