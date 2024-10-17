@@ -13,7 +13,7 @@ class TaskGenSerializer(serializers.ModelSerializer):
 	description = serializers.CharField()
 	duration = serializers.TimeField()
 	exp = serializers.IntegerField()
-	category = serializers.PrimaryKeyRelatedField()
+	category = serializers.PrimaryKeyRelatedField(queryset=Categories.objects.all())
 	class Meta:
 		model = Tasks
 		fields = ['id', 'author_id', 'name', 'description', 'duration', 'exp', 'category']
@@ -25,7 +25,7 @@ class TaskSerializer(serializers.ModelSerializer):
 	description = serializers.CharField()
 	duration = serializers.TimeField()
 	exp = serializers.IntegerField()
-	category = serializers.PrimaryKeyRelatedField()
+	category = serializers.PrimaryKeyRelatedField(queryset=Categories.objects.all())
 	class Meta:
 		model = Tasks
 		fields = ['id']

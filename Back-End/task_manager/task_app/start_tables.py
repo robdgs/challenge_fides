@@ -3,7 +3,7 @@ from django.db.models.signals import post_migrate
 from django.dispatch import receiver
 
 def CreateTasks(**kwargs):
-	cate = Categories.objects.create()
+	cate = ''
 	if not Categories.objects.all():
 		cate = Categories.objects.create(
 			name = 'cate',

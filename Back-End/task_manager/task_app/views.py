@@ -29,7 +29,7 @@ class ManageTask(APIView):
 	permission_classes = (permissions.AllowAny,)
 	def get(self, request):
 		try:
-			request_data = TaskSerializer(data=request.data)
+			request_data = TaskGenSerializer(data=request.data)
 			if request_data.is_valid():
 				taskid = request_data['id'].value
 				task = Tasks.objects.get(id=taskid)
@@ -53,7 +53,7 @@ class ManageTask(APIView):
 			return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
 	def post(self, request):
 		try:
-			request_data = TaskSerializer(data=request.data)
+			request_data = TaskGenSerializer(data=request.data)
 			if request_data.is_valid():
 				taskid = request_data['id'].value
 				categoryid = request_data['category'].value
