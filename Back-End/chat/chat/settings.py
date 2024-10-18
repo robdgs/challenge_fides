@@ -28,6 +28,9 @@ DEBUG = True
 
 ALLOWED_HOSTS = [
 	'localhost',
+	'127.0.0.1'
+	'http://localhost:8000',
+	'http://localhost:8001',
 	'http://localhost:3000/home',
 	'http://localhost:3000/login',
 	'http://localhost:3000/register'
@@ -48,6 +51,8 @@ INSTALLED_APPS = [
 	'oauth2_provider',
 	'corsheaders',
 	'channels',
+	'celery',
+	'redis',
 ]
 
 MIDDLEWARE = [
@@ -59,8 +64,10 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-	'my_chat.middleware.TokenAuthMiddleware',
+	#'my_chat.middleware.TokenAuthMiddleware',
+	#'my_chat.middleware.TokenAuthMiddlewareHTTP',
 ]
+	# 'oauth2_provider.middleware.OAuth2TokenMiddleware',
 
 ROOT_URLCONF = 'chat.urls'
 
@@ -81,7 +88,7 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'chat.wsgi.application'
-
+ASGI_APPLICATION = 'chat.routing.application'
 
 oauth2_settings = {
 	'INTROSPECT_URL': 'http://localhost:8000/o/introspect/',
@@ -162,3 +169,16 @@ STATIC_ROOT = '/home/lollo/Documents/challenge_fides/Back-End/login/staticfiles'
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+ASGI_APPLICATION = 'chat.asgi.application'
+
+CORS_ORIGIN_ALLOW_ALL = True
+
+CHANNEL_LAYERS = {
+	'default': {
+		'BACKEND': 'channels_redis.core.RedisChannelLayer',
+		'CONFIG': {
+			"hosts": [('localhost', 6379)],
+		},
+	}
+}

@@ -22,9 +22,6 @@ def create_oauth2_application_and_superuser(**kwargs):
 
 		client_id = client['CLIENT_ID']
 		client_secret = client['CLIENT_SECRET']
-		print("client_id", client_id)
-		print(client)
-		print('caaa')
 		# Create OAuth2 application
 		application = Application.objects.create(
 			name='my_login',

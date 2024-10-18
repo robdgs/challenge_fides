@@ -1,4 +1,3 @@
-from django.contrib.auth.models import User
 from django.db import models
 
 # Create your models here.
@@ -23,4 +22,4 @@ class chat_message(models.Model):
 	timestamp = models.DateTimeField(auto_now_add=True)
 
 def get_user_model(id):
-	return User.objects.get(user_id=id)
+	return UserProfile.objects.get(user_id=id)

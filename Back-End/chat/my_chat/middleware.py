@@ -21,13 +21,13 @@ def get_user_from_token(token):
     if response.status_code == 200:
         data = response.json()
         if data.get('active'):
-            # Assuming the user information is in the 'username' field
-            username = data.get('username')
+            # Assuming the user information is in the 'user_id' field
+            user_id = data.get('user_id')
             # Fetch the user from your database
             from django.contrib.auth import get_user_model
             User = get_user_model()
             try:
-                user = User.objects.get(username=username)
+                user = User.objects.get(user_id=user_id)
                 return user
             except User.DoesNotExist:
                 return AnonymousUser()
@@ -47,6 +47,45 @@ class TokenAuthMiddleware(BaseMiddleware):
 
         return await super().__call__(scope, receive, send)
 
-# Create a middleware stack with your TokenAuthMiddleware
+
 def TokenAuthMiddlewareStack(inner):
     return TokenAuthMiddleware(AuthMiddlewareStack(inner))
+
+from django.utils.deprecation import MiddlewareMixin
+from django.contrib.auth.models import AnonymousUser
+from django.conf import settings
+import requests
+
+class TokenAuthMiddlewareHTTP(MiddlewareMixin):
+    def process_request(self, request):
+        token = request.META.get('HTTP_AUTHORIZATION')
+        if token:
+            token = token.replace("Bearer ", "")
+            user = self.get_user_from_token(token)
+            request.user = user
+        else:
+            request.user = AnonymousUser()
+
+    def get_user_from_token(self, token):
+        introspection_url = settings.OAUTH2_INTROSPECTION_URL
+        client_id = settings.OAUTH2_CLIENT_ID
+        client_secret = settings.OAUTH2_CLIENT_SECRET
+
+        response = requests.post(introspection_url, data={
+            'token': token,
+            'client_id': client_id,
+            'client_secret': client_secret,
+        })
+
+        if response.status_code == 200:
+            data = response.json()
+            if data.get('active'):
+                user_id = data.get('user_id')
+                from django.contrib.auth import get_user_model
+                User = get_user_model()
+                try:
+                    user = User.objects.get(user_id=user_id)
+                    return user
+                except User.DoesNotExist:
+                    return AnonymousUser()
+        return AnonymousUser()
