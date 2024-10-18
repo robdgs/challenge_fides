@@ -3,16 +3,16 @@ from rest_framework.response import Response
 from rest_framework import status
 from oauth2_provider.contrib.rest_framework import TokenHasReadWriteScope, TokenHasScope
 from rest_framework.views import APIView
-from .models import chat_room, chat_message, user
+from .models import chat_room, chat_message, UserProfile
 from .serializers import chat_roomSerializer, chat_messageSerializer, userSerializer
 
 class get_user_chat_rooms(APIView):
 	def get(self, request):
-		username = request.query_params.get('username')
-		if not username:
+		id = request.query_params.get('user_id')
+		if not id:
 			return Response({"error": "username is required"}, status=400)
 		
-		chat_rooms = chat_room.objects.filter(users__username=username)
+		chat_rooms = chat_room.objects.filter(UserProfile__user_id=id)
 		serializer = chat_roomSerializer(chat_rooms, many=True)
 		return Response(serializer.data)
 	
