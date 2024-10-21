@@ -3,7 +3,7 @@
   }
   
   .home-content {
-	margin-left: 200px; /* Adjust for the width of the navbar */
+	margin-left: 100px; /* Adjust for the width of the navbar */
 	padding: 20px;
 	flex: 1;
   }

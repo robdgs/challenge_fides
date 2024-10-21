@@ -1,0 +1,42 @@
+.tasks-container {
+	margin-left: 200px; /* Adjust for the width of the navbar */
+	padding: 20px;
+	transition: margin-left 0.3s ease;
+  }
+  
+  .tasks-container.reduced {
+	margin-left: 60px; /* Adjust for the reduced width of the navbar */
+  }
+  
+  .tasks {
+	text-align: center;
+  }
+  
+  .tasks-list {
+	margin-top: 20px;
+	width: 100%;
+	max-width: 600px;
+	border: 1px solid #ccc;
+	border-radius: 10px;
+	padding: 20px;
+	background-color: #f9f9f9;
+  }
+  
+  .task {
+	margin-bottom: 20px;
+  }
+  
+  form {
+	margin-bottom: 20px;
+  }
+  
+  input {
+	margin: 5px;
+	padding: 10px;
+	width: calc(100% - 22px);
+	box-sizing: border-box;
+  }
+  
+  button {
+	padding: 10px 20px;
+  }
