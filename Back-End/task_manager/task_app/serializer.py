@@ -6,20 +6,52 @@ class CategoriesSerializer(serializers.ModelSerializer):
 		model = Categories
 		fields = '__all__'
 
-class TaskGenSerializer(serializers.ModelSerializer):
-	id = serializers.IntegerField()
-	author_id = serializers.IntegerField()
-	name = serializers.CharField()
-	description = serializers.CharField()
-	duration = serializers.TimeField()
-	exp = serializers.IntegerField()
-	category = serializers.PrimaryKeyRelatedField(queryset=Categories.objects.all())
+class TaskEditSerializer(serializers.ModelSerializer):
+	id = serializers.IntegerField(default=0)
+	author_id = serializers.IntegerField(default=0)
+	name = serializers.CharField(default='empty')
+	description = serializers.CharField(default='empty')
+	duration = serializers.TimeField(default='0:0:0')
+	exp = serializers.IntegerField(default=0)
+	category = serializers.IntegerField(default=0)
 	class Meta:
 		model = Tasks
 		fields = ['id', 'author_id', 'name', 'description', 'duration', 'exp', 'category']
 
 class TaskSerializer(serializers.ModelSerializer):
-	id = serializers.IntegerField()
+	author_id = serializers.IntegerField()
+	name = serializers.CharField(max_length=255)
+	description = serializers.CharField()
+	duration = serializers.TimeField()
+	exp = serializers.IntegerField()
+	category = serializers.PrimaryKeyRelatedField(queryset=Categories.objects.all())
+
+	def validate_id(self, value):
+		try:
+			int(value)
+		except ValueError:
+			raise serializers.ValidationError('id is not valid')
+		return value
+	
+	def validate_author_id(self, value):
+		try:
+			int(value)
+		except ValueError:
+			raise serializers.ValidationError('author_id is not valid')
+		return value
+	
+	def validate_exp(self, value):
+		try:
+			int(value)
+		except ValueError:
+			raise serializers.ValidationError('exp is not valid')
+		return value
+
+	class Meta:
+		model = Tasks
+		fields = '__all__'
+
+class TaskGenSerializer(serializers.ModelSerializer):
 	author_id = serializers.IntegerField()
 	name = serializers.CharField()
 	description = serializers.CharField()
@@ -28,7 +60,7 @@ class TaskSerializer(serializers.ModelSerializer):
 	category = serializers.PrimaryKeyRelatedField(queryset=Categories.objects.all())
 	class Meta:
 		model = Tasks
-		fields = ['id']
+		fields = ['author_id', 'name', 'description', 'duration', 'exp', 'category']
 
 class ProgressesSerializer(serializers.ModelSerializer):
 	class Meta:

@@ -3,7 +3,6 @@ from django.db.models.signals import post_migrate
 from django.dispatch import receiver
 
 def CreateTasks(**kwargs):
-	cate = ''
 	if not Categories.objects.all():
 		cate = Categories.objects.create(
 			name = 'cate',
@@ -17,7 +16,7 @@ def CreateTasks(**kwargs):
 			description = 'ciao',
 			duration = '10:10',
 			exp = 100,
-			category = cate
+			category = Categories.objects.get(id=1)
 		)
 		stoca.save()
 
