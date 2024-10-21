@@ -1,0 +1,25 @@
+.home {
+	display: flex;
+  }
+  
+  .home-content {
+	margin-left: 200px; /* Adjust for the width of the navbar */
+	padding: 20px;
+	flex: 1;
+  }
+  
+  .avatar-and-graphics {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+  }
+  
+  .task-graphics {
+	margin-top: 20px;
+	width: 100%;
+	max-width: 600px;
+	border: 1px solid #ccc;
+	border-radius: 10px;
+	padding: 20px;
+	background-color: #f9f9f9;
+  }
