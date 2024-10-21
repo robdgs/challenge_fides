@@ -1,5 +1,13 @@
 from rest_framework import serializers
 from .models import Categories, Tasks, Progresses
+import datetime
+
+def IsInteger(value):
+	try:
+		int(value)
+	except ValueError:
+		return False
+	return True
 
 class CategoriesSerializer(serializers.ModelSerializer):
 	class Meta:
@@ -25,25 +33,28 @@ class TaskSerializer(serializers.ModelSerializer):
 	duration = serializers.TimeField()
 	exp = serializers.IntegerField()
 	category = serializers.PrimaryKeyRelatedField(queryset=Categories.objects.all())
-
-	def validate_id(self, value):
-		try:
-			int(value)
-		except ValueError:
-			raise serializers.ValidationError('id is not valid')
-		return value
 	
 	def validate_author_id(self, value):
-		try:
-			int(value)
-		except ValueError:
+		if IsInteger(value) is False:
 			raise serializers.ValidationError('author_id is not valid')
 		return value
 	
+	def validate_name(self, value):
+		if len(str(value)) < 1:
+			raise serializers.ValidationError('name is not valid')
+		return value
+	
+	def validate_description(self, value):
+		if len(str(value)) < 1:
+			raise serializers.ValidationError('description is not valid')
+		return value
+	
+	def validate_duration(self, value):
+		
+		return value
+	
 	def validate_exp(self, value):
-		try:
-			int(value)
-		except ValueError:
+		if IsInteger(value) is False:
 			raise serializers.ValidationError('exp is not valid')
 		return value
 
