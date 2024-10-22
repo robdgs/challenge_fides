@@ -2,15 +2,14 @@ from django.urls import path
 from . import views
 
 urlpatterns = [
-	# path('category', views.CategoryGen.as_view(), name='category_gen'),
-	# path('category/<int:id>/', views.CategoryManage.as_view(), name='category_manage'),
 	path('task', views.TaskGen.as_view(), name='task_gen'),
 	path('task/<int:id>/', views.TaskManage.as_view(), name='task_manage'),
-	path('progress', views.GetProgress.as_view(), name='progress'),
-	path('progress_update', views.UpdateProgress.as_view(), name='progress_update'),
-	path('tasks_by_user', views.GetTasksByUser.as_view(), name='task_by_user'),
-	path('users_by_task', views.GetUsersByTask.as_view(), name='users_by_task'),
-	path('tasks_by_category', views.GetTasksByCategory.as_view(), name='tasks_by_category'),
-	path('gufet', views.GetUsersForEachTask.as_view(), name='gufet'),
-	path('gtfeu', views.GetTasksForEachUser.as_view(), name='gtfeu')
+	path('progress', views.ProgressGen.as_view(), name='progress_gen'),
+	path('progress_manage/<int:id>/', views.ProgressManage.as_view(), name='progress_manage'),
+	path('user_progress/<int:task>&<int:account_id>/', views.ProgressManage.as_view(), name='user_progress'),
+	# path('tasks_by_user', views.GetTasksByUser.as_view(), name='task_by_user'),
+	# path('users_by_task', views.GetUsersByTask.as_view(), name='users_by_task'),
+	# path('tasks_by_category', views.GetTasksByCategory.as_view(), name='tasks_by_category'),
+	# path('gufet', views.GetUsersForEachTask.as_view(), name='gufet'),
+	# path('gtfeu', views.GetTasksForEachUser.as_view(), name='gtfeu')
 ]

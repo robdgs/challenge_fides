@@ -16,7 +16,7 @@ class Tasks(models.Model):
 	duration = models.DurationField()
 	exp = models.PositiveIntegerField()
 	category = models.CharField(max_length=2, choices=TASK_CATEGORIES)
-	# previous_task = models.ForeignKey('Tasks', on_delete=models.SET(0))
+	previous_task = models.ForeignKey("Tasks", null=True, on_delete=models.SET_NULL)
 	# next_task = models.ForeignKey('Tasks', on_delete=models.SET(0))
 
 class Progresses(models.Model):
@@ -26,4 +26,4 @@ class Progresses(models.Model):
 	rate = models.DecimalField(max_digits=6, decimal_places=3)
 	begin_date = models.DateTimeField(auto_now_add=True)
 	last_modified = models.DateTimeField(auto_now=True)
-	finish_date = models.DateTimeField()
+	finish_date = models.DateTimeField(null=True)
