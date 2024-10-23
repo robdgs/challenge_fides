@@ -64,6 +64,7 @@ def create_chat_room():
 			for i, j, similarity in similarities:
 				writer.writerow([user_with_taks[i].id, user_with_taks[j].id, similarity])
 
+
 def calculate_similarity(user1, user2):
     # Convert user profiles to numpy arrays
 	user1_profile = np.array(user1.tasks)
@@ -85,4 +86,5 @@ def calculate_similarity(user1, user2):
 		# for y in range(len(task.users)):
 			# response[x] += task.users[y]
 	# print(response.json())
+
 #output
