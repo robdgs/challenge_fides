@@ -5,6 +5,7 @@ from channels.security.websocket import AllowedHostsOriginValidator
 from django.urls import path
 from my_chat.middleware import TokenAuthMiddlewareStack
 from my_chat import consumers
+from my_chat.routing import websocket_urlpatterns
 
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'chat.settings')
 
@@ -18,10 +19,11 @@ os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'chat.settings')
 #         )
 #     ),
 # })
+
 application = ProtocolTypeRouter({
 	"http": get_asgi_application(),
 	"websocket":
 		URLRouter([
-			path('ws/chat/<str:room_name>/', consumers.ChatConsumer.as_asgi()),
+			websocket_urlpatterns
 		]),
 })

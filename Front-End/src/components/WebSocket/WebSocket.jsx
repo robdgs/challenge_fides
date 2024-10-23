@@ -1,6 +1,87 @@
 import React, { useState, useEffect } from 'react';
 import useWebSocket from 'react-use-websocket';
+/* // ChatComponent.js
+import React, { useContext, useState } from 'react';
+import { WebSocketContext } from './WebSocketProvider';
 
+const ChatComponent = () => {
+    const { messages, sendMessage } = useContext(WebSocketContext);
+    const [input, setInput] = useState('');
+
+    const handleSend = () => {
+        const message = {
+            message: input,
+            room_id: 1, // Replace with actual room ID
+            sender: 'testuser', // Replace with actual sender
+            timestamp: new Date().toISOString(),
+        };
+        sendMessage(message);
+        setInput('');
+    };
+
+    return (
+        <div>
+            <div>
+                {messages.map((msg, index) => (
+                    <div key={index}>
+                        <strong>{msg.sender}</strong>: {msg.message}
+                    </div>
+                ))}
+            </div>
+            <input
+                type="text"
+                value={input}
+                onChange={(e) => setInput(e.target.value)}
+            />
+            <button onClick={handleSend}>Send</button>
+        </div>
+    );
+};
+
+export default ChatComponent; // WebSocketProvider.js
+import React, { createContext, useEffect, useRef, useState } from 'react';
+
+export const WebSocketContext = createContext(null);
+
+export const WebSocketProvider = ({ children }) => {
+    const [messages, setMessages] = useState([]);
+    const ws = useRef(null);
+
+    useEffect(() => {
+        // Replace 'room_name' with the actual room name
+        const roomName = 'room_name';
+        ws.current = new WebSocket(`ws://localhost:8002/ws/chat/${roomName}/`);
+
+        ws.current.onopen = () => {
+            console.log('WebSocket connected');
+        };
+
+        ws.current.onmessage = (event) => {
+            const message = JSON.parse(event.data);
+            setMessages((prevMessages) => [...prevMessages, message]);
+        };
+
+        ws.current.onclose = () => {
+            console.log('WebSocket disconnected');
+        };
+
+        return () => {
+            ws.current.close();
+        };
+    }, []);
+
+    const sendMessage = (message) => {
+        if (ws.current.readyState === WebSocket.OPEN) {
+            ws.current.send(JSON.stringify(message));
+        }
+    };
+
+    return (
+        <WebSocketContext.Provider value={{ messages, sendMessage }}>
+            {children}
+        </WebSocketContext.Provider>
+    );
+};*/
 const WebSocketComponent = () => {
   const [message, setMessage] = useState('');
   const [chat, setChat] = useState([]);

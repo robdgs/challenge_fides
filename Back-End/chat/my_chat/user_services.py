@@ -1,4 +1,4 @@
-from .models import chat_room, chat_message, UserProfile
+from .models import ChatRoom, ChatMessage, UserProfile
 from channels.db import database_sync_to_async
 
 async def register_user(username):

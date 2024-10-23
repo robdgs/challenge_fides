@@ -174,11 +174,21 @@ ASGI_APPLICATION = 'chat.asgi.application'
 
 CORS_ORIGIN_ALLOW_ALL = True
 
+CACHES = {
+    'default': {
+        'BACKEND': 'django_redis.cache.RedisCache',
+        'LOCATION': 'redis://redis:6700/1',
+        'OPTIONS': {
+            'CLIENT_CLASS': 'django_redis.client.DefaultClient',
+        }
+    }
+}
+
 CHANNEL_LAYERS = {
-	'default': {
-		'BACKEND': 'channels_redis.core.RedisChannelLayer',
-		'CONFIG': {
-			"hosts": [('localhost', 6379)],
-		},
-	}
+    'default': {
+        'BACKEND': 'channels_redis.core.RedisChannelLayer',
+        'CONFIG': {
+            "hosts": [('redis', 6700)],
+        },
+    }
 }
