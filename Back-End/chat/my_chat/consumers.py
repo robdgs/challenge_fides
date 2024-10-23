@@ -1,7 +1,8 @@
 import json
 from channels.generic.websocket import AsyncWebsocketConsumer
-from my_chat.models import UserProfile, chat_room, chat_message
+from my_chat.models import UserProfile, ChatRoom, ChatMessage
 from .user_services import register_user
+from asgiref.sync import sync_to_async
 
 class ChatConsumer(AsyncWebsocketConsumer):
 	async def connect(self):
@@ -37,14 +38,23 @@ class ChatConsumer(AsyncWebsocketConsumer):
 		timestamp = text_data_json['timestamp']
 
         # Save message to database
-		chat_message.objects.create(
-			room_id=room_id,
+		room = await sync_to_async(ChatRoom.objects.get)(id=room_id)
+
+		if room is None:
+			self.send(text_data=json.dumps({
+				'error': 'Room does not exist'
+			}))
+			return
+
+        # Save message to database
+		await sync_to_async(ChatMessage.objects.create)(
+			room_id=room,
 			message=message,
 			sender=sender,
 			timestamp=timestamp
 		)
 
-		# Send message to room group
+        # Send message to room group
 		await self.channel_layer.group_send(
 			self.room_group_name,
 			{

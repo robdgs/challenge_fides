@@ -5,9 +5,15 @@ from channels.db import database_sync_to_async
 from django.contrib.auth.models import AnonymousUser
 from channels.auth import AuthMiddlewareStack
 from django.conf import settings
+from django.core.cache import cache
 
 @database_sync_to_async
 def get_user_from_token(token):
+    # Check i chached the user
+    user = cache.get(token)
+    if user:
+        return user
+
     introspection_url = settings.OAUTH2_INTROSPECTION_URL
     client_id = settings.OAUTH2_CLIENT_ID
     client_secret = settings.OAUTH2_CLIENT_SECRET
@@ -21,13 +27,13 @@ def get_user_from_token(token):
     if response.status_code == 200:
         data = response.json()
         if data.get('active'):
-            # Assuming the user information is in the 'user_id' field
             user_id = data.get('user_id')
-            # Fetch the user from your database
             from django.contrib.auth import get_user_model
             User = get_user_model()
             try:
                 user = User.objects.get(user_id=user_id)
+                # Cache the user for a certain period (e.g., 5 minutes)
+                cache.set(token, user, timeout=300)
                 return user
             except User.DoesNotExist:
                 return AnonymousUser()
@@ -39,14 +45,12 @@ class TokenAuthMiddleware(BaseMiddleware):
         token = query_string.get("token")
         
         if token:
-            # Remove "Bearer " from the token if sent in that format
             token = token[0].replace("Bearer ", "")
             scope["user"] = await get_user_from_token(token)
         else:
             scope["user"] = AnonymousUser()
 
         return await super().__call__(scope, receive, send)
-
 
 def TokenAuthMiddlewareStack(inner):
     return TokenAuthMiddleware(AuthMiddlewareStack(inner))
@@ -55,6 +59,7 @@ from django.utils.deprecation import MiddlewareMixin
 from django.contrib.auth.models import AnonymousUser
 from django.conf import settings
 import requests
+from django.core.cache import cache
 
 class TokenAuthMiddlewareHTTP(MiddlewareMixin):
     def process_request(self, request):
@@ -67,6 +72,11 @@ class TokenAuthMiddlewareHTTP(MiddlewareMixin):
             request.user = AnonymousUser()
 
     def get_user_from_token(self, token):
+        # Check if I cached the user
+        user = cache.get(token)
+        if user:
+            return user
+
         introspection_url = settings.OAUTH2_INTROSPECTION_URL
         client_id = settings.OAUTH2_CLIENT_ID
         client_secret = settings.OAUTH2_CLIENT_SECRET
@@ -85,6 +95,8 @@ class TokenAuthMiddlewareHTTP(MiddlewareMixin):
                 User = get_user_model()
                 try:
                     user = User.objects.get(user_id=user_id)
+                    # Cache the user for the token refresh period)
+                    cache.set(token, user, timeout=token.get('expires_in', 300))
                     return user
                 except User.DoesNotExist:
                     return AnonymousUser()
