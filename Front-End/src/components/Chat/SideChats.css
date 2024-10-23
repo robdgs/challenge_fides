@@ -1,0 +1,10 @@
+.sidechat {
+	width: 100%;
+	height: calc(100vh - 50px);
+	display: flex;
+	flex-direction: column;
+	justify-content: flex-start;
+	min-width: 300px;
+	max-width: 400px;
+	overflow-y: auto;
+}

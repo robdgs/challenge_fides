@@ -1,0 +1,62 @@
+version: '3.8'
+
+services:
+  user_db:
+    build: user_db/
+    container_name: container_user_db
+    ports:
+      - "5433:5432"  # Map host port 5433 to container port 5432
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+
+  task_db:
+    build: task_db/
+    container_name: container_task_db
+    ports:
+      - "5434:5432"  # Map host port 5434 to container port 5432
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+
+  login_db:
+    build: login_db/
+    container_name: container_login_db
+    ports:
+      - "5435:5432"  # Map host port 5435 to container port 5432
+    networks:
+      - login_network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+
+  chat_db:
+    build: chat_db/
+    container_name: container_chat_db
+    ports:
+      - "5436:5432"  # Map host port 5436 to container port 5432
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+
+  redis:
+    image: "redis:latest"
+    ports:
+      - 6700:6379 # cache and channel server
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+
+networks:
+  login_network:
+    driver: bridge

@@ -12,7 +12,7 @@ sed -n '/##apt/,/##end/p' to_install.txt | sed '1d;$d' | xargs sudo apt install 
 
 ## install with npm
 
-sudo npm install -g $(sed -n '/##npm/,/##fin/p' to_install.txt | sed '1d;$d')
+#sudo npm install -g $(sed -n '/##npm/,/##fin/p' to_install.txt | sed '1d;$d')
 
 ## install with pip
 
@@ -33,12 +33,9 @@ fi
 
 source "$venv_path/bin/activate"
 
-pip install -r requirements.txt
-
 ## install with pip
-
-sed -n '/##pip/,/##fin/p' to_install.txt | sed '1d;$d' | xargs "$venv_path/bin/pip" install
+pip install -r requirements.txt
 
 ## install with npm
 
-npm install react-router-dom
+#npm install react-router-dom

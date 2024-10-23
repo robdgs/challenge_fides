@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 
 from pathlib import Path
 import os
+import secrets
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -30,6 +31,8 @@ DEBUG = True
 ALLOWED_HOSTS = ['*']
 
 CORS_ALLOWED_ORIGINS = [
+	"http://localhost:8001",
+	"http://localhost:8000",
 	"http://localhost:3000",
 	"http://127.0.0.1:3000",
 	"http://0.0.0.0'",
@@ -87,21 +90,14 @@ WSGI_APPLICATION = 'login.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.sqlite3',
-#         'NAME': BASE_DIR / 'db.sqlite3',
-#     }
-# }
-
 DATABASES = {
 	'default': {
 		'ENGINE': 'django.db.backends.postgresql',
 		'NAME': 'login_db',
-		'USER': 'lollo',
+		'USER': 'pasquale',
 		'PASSWORD' : '123',
 		'HOST': 'localhost',
-		'PORT': '5433',
+		'PORT': '5435',
 	}
 }
 
@@ -140,10 +136,13 @@ AUTH_PASSWORD_VALIDATORS = [
 # settings.py
 
 OAUTH2_PROVIDER = {
-    'ACCESS_TOKEN_EXPIRE_SECONDS': 3600,  # 1 hour
-    'REFRESH_TOKEN_EXPIRE_SECONDS': 86400,  # 1 day
-    'ROTATE_REFRESH_TOKEN': True,
+	'ACCESS_TOKEN_EXPIRE_SECONDS': 3600,  # 1 hour
+	'REFRESH_TOKEN_EXPIRE_SECONDS': 86400,  # 1 day
+	'ROTATE_REFRESH_TOKEN': True,
+	'ALLOWED_GRANT_TYPES': ['client_credentials', 'authorization_code', 'password', 'refresh_token', 'token'],
+	'SCOPES': {'read': 'Read scope', 'write': 'Write scope', 'groups': 'Access to your groups'},
 }
+
 # Internationalization
 # https://docs.djangoproject.com/en/4.2/topics/i18n/
 
@@ -154,14 +153,21 @@ TIME_ZONE = 'UTC'
 USE_I18N = True
 
 USE_TZ = True
+client = {
+	'CLIENT_ID' : '',
+	'CLIENT_SECRET' : '',
+}
 
+client['CLIENT_ID'] = 'fIdyZIRNl-ZdCVxwTs7UtcTfCy_gWVQpR_JMlr9aho8' #.env
+client['CLIENT_SECRET'] = 'OET0Drwd9vtChBjunLvrVfGsf3nCtSOBAmVauPOfMqUkcObkC9_2VFvsfbu-0rDbnz9lD5tpEvGJw5nScsGjGw'
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
 STATIC_URL = 'static/'
-
+STATIC_ROOT = '/home/lollo/Documents/challenge_fides/Back-End/login/staticfiles'
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+SERVICE_PASSWORD = os.getenv('SERVICE_PASSWORD','123') # this is the password that the service will use to authenticate itself to the OAuth2 server
