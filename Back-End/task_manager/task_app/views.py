@@ -1,9 +1,9 @@
 from django.shortcuts import render, get_object_or_404
 from rest_framework.views import APIView
-from rest_framework import permissions, status, generics
+from rest_framework import permissions, status, generics , mixins
 from rest_framework.response import Response
 from .models import Tasks, Progresses
-from .serializer import TasksSerializer,ProgressesSerializer
+from .serializer import TasksSerializer, ProgressesSerializer, ProgressManageSerializer
 import json, datetime
 
 class MultipleFieldLookupMixin:
@@ -39,16 +39,15 @@ class ProgressGen(generics.ListCreateAPIView):
 	serializer_class = ProgressesSerializer
 	queryset = Progresses.objects.all()
 
-class ProgressManage(generics.RetrieveUpdateDestroyAPIView):
+class ProgressDelete(generics.DestroyAPIView):
 	permission_classes = (permissions.AllowAny,)
 	serializer_class = ProgressesSerializer
 	# lookup_field = 'id'
 	lookup_url_kwarg = 'id'
 	queryset = Progresses.objects.all()
 
-class UserProgress(MultipleFieldLookupMixin, generics.RetrieveUpdateAPIView):
+class ProgressManage(MultipleFieldLookupMixin, generics.RetrieveUpdateAPIView):
 	permission_classes = (permissions.AllowAny,)
-	serializer_class = ProgressesSerializer
-	lookup_field = ['task', 'account_id']
-	# lookup_url_kwarg = 'id'
+	serializer_class = ProgressManageSerializer
+	lookup_fields = ['task', 'account_id']
 	queryset = Progresses.objects.all()

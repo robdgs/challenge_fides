@@ -9,7 +9,7 @@ from .dictionaries import TASK_CATEGORIES
 # 	description = models.TextField()
 
 class Tasks(models.Model):
-	id = models.AutoField(primary_key=True)
+	id = models.AutoField(primary_key=True, unique=True)
 	author_id = models.IntegerField()
 	name = models.CharField(max_length=255)
 	description = models.TextField()
@@ -20,10 +20,10 @@ class Tasks(models.Model):
 	# next_task = models.ForeignKey('Tasks', on_delete=models.SET(0))
 
 class Progresses(models.Model):
-	id = models.AutoField(primary_key=True)
-	task = models.ForeignKey(Tasks, on_delete=models.CASCADE)
+	id = models.AutoField(primary_key=True, unique=True)
+	task = models.ForeignKey(Tasks, on_delete=models.CASCADE, related_name="+")
 	account_id = models.IntegerField()
-	rate = models.DecimalField(max_digits=6, decimal_places=3)
+	rate = models.DecimalField(max_digits=6, decimal_places=3, default=0)
 	begin_date = models.DateTimeField(auto_now_add=True)
 	last_modified = models.DateTimeField(auto_now=True)
 	finish_date = models.DateTimeField(null=True)
