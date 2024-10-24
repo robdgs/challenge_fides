@@ -3,7 +3,7 @@ from django.db import models
 # Create your models here.
 
 class UserProfile(models.Model):
-	username = models.TextField()
+	username = models.CharField(max_length=255,null=True)
 	user_id = models.IntegerField(primary_key=True)
 
 class ChatRoom(models.Model):
@@ -12,6 +12,7 @@ class ChatRoom(models.Model):
 	room_description = models.TextField()
 	users = models.ManyToManyField(UserProfile)
 	starttime = models.DateTimeField(auto_now_add=True)
+	Creator = models.ForeignKey(UserProfile, related_name='creator')
 
 	def get_user_number(self):
 		return self.users.count()

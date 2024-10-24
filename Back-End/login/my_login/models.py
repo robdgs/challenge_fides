@@ -28,7 +28,7 @@ class AppUserManager(BaseUserManager):
 class AppUser(AbstractBaseUser, PermissionsMixin):
 	user_id = models.AutoField(primary_key=True)
 	email = models.EmailField(max_length=50, unique=True)
-	username = models.CharField(max_length=50)
+	username = models.CharField(max_length=100)
 	USERNAME_FIELD = 'email'
 	REQUIRED_FIELDS = ['username']
 	is_staff = models.BooleanField(default=False)
