@@ -51,3 +51,44 @@ class ProgressManage(MultipleFieldLookupMixin, generics.RetrieveUpdateAPIView):
 	serializer_class = ProgressManageSerializer
 	lookup_fields = ['task', 'account_id']
 	queryset = Progresses.objects.all()
+
+class GetUserByTask(APIView):
+	permission_classes = (permissions.AllowAny,)
+	def get(self, request):
+		tasks = Tasks.objects.all()
+		progresses = Progresses.objects.all()
+		ans = dict()
+		for x in tasks:
+			row = []
+			for y in progresses:
+				if x.id is y.task.id:
+					row.append(y.account_id)
+			ans[x.id] = row
+		if len(ans) < 1:
+			return Response({
+				'error': 'info not found'
+			}, status.HTTP_400_BAD_REQUEST)
+		return Response(ans)
+
+class GetTaskByUser(APIView):
+	permission_classes = (permissions.AllowAny,)
+	def get(self, request):
+		progresses = Progresses.objects.all()
+		users = []
+		for x in progresses:
+			try:
+				users[x.account_id]
+			except IndexError:
+				users.append(x.account_id)
+		ans = dict()
+		for x in users:
+			row = []
+			for y in progresses:
+				if x is y.account_id:
+					row.append(y.task.id)
+			ans[x] = row
+		if len(ans) < 1:
+			return Response({
+				'error': 'info not found'
+			}, status.HTTP_400_BAD_REQUEST)
+		return Response(ans) 
