@@ -10,7 +10,7 @@ class TasksSerializer(serializers.ModelSerializer):
 	duration = serializers.DurationField()
 	exp = serializers.IntegerField()
 	category = serializers.ChoiceField(choices=TASK_CATEGORIES)
-	previous_task = serializers.PrimaryKeyRelatedField(queryset=Tasks.objects.all())
+	previous_task = serializers.PrimaryKeyRelatedField(queryset=Tasks.objects.all(), required=False)
 	
 	def validate_name(self, value):
 		if len(str(value)) < 1:
@@ -72,7 +72,7 @@ class ProgressManageSerializer(serializers.ModelSerializer):
 				data['finish_date'] = datetime.datetime.now()
 			return data
 		except KeyError:
-			raise serializers.ValidationError("rate is not valid")
+			raise serializers.ValidationError("rate is not provided")
 	
 	class Meta:
 		model = Progresses
