@@ -1,10 +1,11 @@
 from rest_framework import serializers
 from .models import Tasks, Progresses
+from user_app.models import Users
 from .dictionaries import TASK_CATEGORIES
 import datetime
 
 class TasksSerializer(serializers.ModelSerializer):
-	author_id = serializers.IntegerField()
+	author = serializers.PrimaryKeyRelatedField(queryset=Users.objects.all())
 	name = serializers.CharField(max_length=255)
 	description = serializers.CharField()
 	duration = serializers.DurationField()
@@ -33,7 +34,7 @@ class TasksSerializer(serializers.ModelSerializer):
 
 class ProgressesSerializer(serializers.ModelSerializer):
 	task = serializers.PrimaryKeyRelatedField(queryset=Tasks.objects.all(), many=False)
-	account_id = serializers.IntegerField()
+	user = serializers.PrimaryKeyRelatedField(queryset=Users.objects.all(), many=False)
 	rate = serializers.DecimalField(max_digits=6, decimal_places=3, default=0)
 	begin_date = serializers.DateTimeField(read_only=True)
 	last_modified = serializers.DateTimeField(read_only=True)
@@ -45,7 +46,7 @@ class ProgressesSerializer(serializers.ModelSerializer):
 		return value
 	
 	def validate(self, data):
-		if Progresses.objects.filter(task=data['task'], account_id=data['account_id']).exists():
+		if Progresses.objects.filter(task=data['task'], user=data['user']).exists():
 			raise serializers.ValidationError("user is already registered to this task")
 		return data
 
@@ -55,7 +56,7 @@ class ProgressesSerializer(serializers.ModelSerializer):
 
 class ProgressManageSerializer(serializers.ModelSerializer):
 	task = serializers.PrimaryKeyRelatedField(read_only=True)
-	account_id = serializers.IntegerField(read_only=True)
+	user = serializers.PrimaryKeyRelatedField(read_only=True)
 	rate = serializers.DecimalField(max_digits=6, decimal_places=3, required=True)
 	begin_date = serializers.DateTimeField(read_only=True)
 	last_modified = serializers.DateTimeField(read_only=True)

@@ -49,5 +49,5 @@ class ProgressDelete(generics.DestroyAPIView):
 class ProgressManage(MultipleFieldLookupMixin, generics.RetrieveUpdateAPIView):
 	permission_classes = (permissions.AllowAny,)
 	serializer_class = ProgressManageSerializer
-	lookup_fields = ['task', 'account_id']
+	lookup_fields = ['task', 'user']
 	queryset = Progresses.objects.all()
