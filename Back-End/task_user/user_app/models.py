@@ -8,6 +8,7 @@ class Avatars(models.Model):
 
 class Users(models.Model):
     id = models.AutoField(primary_key=True)
+    staff = models.BooleanField(default=False)
     account_id = models.IntegerField()
     first_name = models.CharField(max_length=255)
     last_name = models.CharField(max_length=255)
@@ -23,4 +24,3 @@ class Friendships(models.Model):
     user_2 = models.ForeignKey(Users, on_delete=models.CASCADE)
     accepted = models.BooleanField(default=False)
     last_modified = models.DateTimeField(auto_now=True)
-    
