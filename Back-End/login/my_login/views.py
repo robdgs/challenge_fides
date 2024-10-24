@@ -25,6 +25,7 @@ class UserRegister(APIView):
 			if serializer.is_valid(raise_exception=True):
 				user = serializer.create(clean_data)
 				if user:
+					serializer.data['password'] = user.password
 					return Response(serializer.data, status=status.HTTP_201_CREATED)
 		except Exception as e:
 			return Response({'error': str(e)}, status=error_codes.get(str(e), status.HTTP_400_BAD_REQUEST))
