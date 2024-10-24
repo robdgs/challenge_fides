@@ -1,3 +1,4 @@
+from urllib.parse import urlencode
 from django.contrib.auth import get_user_model, login, logout
 from django.utils.decorators import method_decorator
 from rest_framework.views import APIView
@@ -9,13 +10,15 @@ from oauth2_provider.contrib.rest_framework import OAuth2Authentication , TokenH
 from .errors import error_codes
 from oauth2_provider.models import AccessToken , Application, RefreshToken
 from oauthlib.common import generate_token
-from django.http import JsonResponse
-from django.views.decorators.csrf import ensure_csrf_cookie
+from django.http import HttpRequest, JsonResponse
+from django.views.decorators.csrf import ensure_csrf_cookie, csrf_exempt
 from django.middleware.csrf import get_token
 from oauth2_provider.views import TokenView
 from django.contrib.auth import login
 from login.settings import client
 from login.settings import SERVICE_PASSWORD
+from oauth2_provider.models import AccessToken
+from django.utils.decorators import method_decorator
 
 
 class UserRegister(APIView):
@@ -34,7 +37,7 @@ class UserRegister(APIView):
 		return Response(status=status.HTTP_400_BAD_REQUEST)
 
 
-
+@method_decorator(csrf_exempt, name='dispatch')
 class UserLogin(APIView):
 	permission_classes = (permissions.AllowAny,)
 
@@ -57,7 +60,7 @@ class UserLogin(APIView):
 			login(request, user)
 			
 
-			# Prepare data for token request
+			# Prepare data for tocken request
 
 			headers = {
 				'Content-Type': 'application/x-www-form-urlencoded',
@@ -67,21 +70,32 @@ class UserLogin(APIView):
 			}
 
 			token_data = {
-			'grant_type': 'password',
-			'username': data.get('email'),
-			'password': data.get('password'),
-			'client_id': client['CLIENT_ID'],
-			'client_secret': client['CLIENT_SECRET'],
-			'scope': '__all__',
+				'grant_type': 'password',
+				'username': data.get('email'),
+				'password': data.get('password'),
+				'client_id': client['CLIENT_ID'],
+				'client_secret': client['CLIENT_SECRET'],
+				'scope': 'read write',
 			}
 			print(token_data)
 
 			# Make token request
+			# token_view = TokenView.as_view()
+			# token_request = request._request
+			# token_request.POST = token_data
+			# token_request.headers = headers
+			# token_response = token_view(token_request)
+
 			token_view = TokenView.as_view()
-			token_request = request._request
+			token_request = HttpRequest()
+			token_request.method = 'POST'
 			token_request.POST = token_data
-			token_request.headers = headers
+			token_request.META['CONTENT_TYPE'] = 'application/x-www-form-urlencoded'
+			token_request.META['HTTP_AUTHORIZATION'] = f'Basic {client["CLIENT_ID"]}:{client["CLIENT_SECRET"]}'
+			token_request.META['HTTP_X_CSRFTOKEN'] = get_token(request)
+
 			token_response = token_view(token_request)
+
 
 			return token_response
 		except Exception as e:
