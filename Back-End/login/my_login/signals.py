@@ -15,27 +15,28 @@ def create_oauth2_application_and_superuser(**kwargs):
 	if not User.objects.filter(email='pasquale@example.com').exists():
 		User.objects.create_superuser(email='pasquale@example.com', password='123')
 
+	print('been here')
 		# Create OAuth2 application if it doesn't exist
-	if Application.objects.filter(name='my_login').exists():
-		#erase Oauth2 application
-		Application.objects.filter(name='my_login').delete()
+	if Application.objects.filter(name = 'my_login').exists():
+		return
 
-		client_id = client['CLIENT_ID']
-		client_secret = client['CLIENT_SECRET']
-		# Create OAuth2 application
-		application = Application.objects.create(
-			name='my_login',
-			client_id=client_id,
-			client_secret=client_secret,
-			client_type=Application.CLIENT_CONFIDENTIAL,
-			authorization_grant_type=Application.GRANT_PASSWORD,
-			redirect_uris='',
-		)
-		# Add all permissions to the application
-		application.scope = '__all__'
-		application.save()
-		if application:
-			print('Created OAuth2 application')
+	client_id = client['CLIENT_ID']
+	client_secret = client['CLIENT_SECRET']
+	print(client_id)
+	# Create OAuth2 application
+	application = Application.objects.create(
+		name='my_login',
+		client_id=client_id,
+		client_secret=client_secret,
+		client_type=Application.CLIENT_CONFIDENTIAL,
+		authorization_grant_type=Application.GRANT_PASSWORD,
+		redirect_uris='',
+	)
+	# Add all permissions to the application
+	application.scope = '__all__'
+	application.save()
+	if application:
+		print('Created OAuth2 application')
 
 
 from oauth2_provider.signals import app_authorized

@@ -1,4 +1,5 @@
 from django.contrib.auth import get_user_model, login, logout
+from django.utils.decorators import method_decorator
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from .serializers import UserRegisterSerializer, UserLoginSerializer, UserSerializer
@@ -10,6 +11,7 @@ from oauth2_provider.models import AccessToken , Application, RefreshToken
 from oauthlib.common import generate_token
 from django.http import JsonResponse
 from django.views.decorators.csrf import ensure_csrf_cookie
+from django.middleware.csrf import get_token
 from oauth2_provider.views import TokenView
 from django.contrib.auth import login
 from login.settings import client
@@ -25,10 +27,12 @@ class UserRegister(APIView):
 			if serializer.is_valid(raise_exception=True):
 				user = serializer.create(clean_data)
 				if user:
+					serializer.data['password'] = user.password
 					return Response(serializer.data, status=status.HTTP_201_CREATED)
 		except Exception as e:
 			return Response({'error': str(e)}, status=error_codes.get(str(e), status.HTTP_400_BAD_REQUEST))
 		return Response(status=status.HTTP_400_BAD_REQUEST)
+
 
 
 class UserLogin(APIView):
@@ -38,6 +42,7 @@ class UserLogin(APIView):
 		try:
 
 			data = request.data
+
 			
 			# Validate email and password
 			if not validate_email(data):
@@ -50,21 +55,32 @@ class UserLogin(APIView):
 			serializer.is_valid(raise_exception=True)
 			user = serializer.check_user(data)
 			login(request, user)
-			print(client)
+			
+
 			# Prepare data for token request
+
+			headers = {
+				'Content-Type': 'application/x-www-form-urlencoded',
+				'Authorization': f'Basic {client["CLIENT_ID"]}:{client["CLIENT_SECRET"]}',
+				'Accept': 'application/json',
+				'X-CSRFToken': get_token(request),
+			}
+
 			token_data = {
-				'grant_type': 'password',
-				'username': data.get('email'),
-				'password': data.get('password'),
-				'client_id': client['CLIENT_ID'],
-				'client_secret': client['CLIENT_SECRET'],
-				'scope': 'read write',
+			'grant_type': 'password',
+			'username': data.get('email'),
+			'password': data.get('password'),
+			'client_id': client['CLIENT_ID'],
+			'client_secret': client['CLIENT_SECRET'],
+			'scope': '__all__',
 			}
 			print(token_data)
+
 			# Make token request
 			token_view = TokenView.as_view()
 			token_request = request._request
 			token_request.POST = token_data
+			token_request.headers = headers
 			token_response = token_view(token_request)
 
 			return token_response
