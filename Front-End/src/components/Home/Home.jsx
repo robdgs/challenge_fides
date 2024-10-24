@@ -24,6 +24,7 @@ const Home = () => {
 					<button onClick={toggleDiv}>Toggle Div</button>
 				</div>
         {/* {isDivVisible && <SideChats />} */}
+				{/* nome del canale e il resto in models.py tranne auto... mi restituisc e restituisce un json*/}
         {isDivVisible && <WebSocketComponent />}
         <div className={`content ${isDivVisible ? 'content-reduced' : ''}`}></div>
 			</div>
