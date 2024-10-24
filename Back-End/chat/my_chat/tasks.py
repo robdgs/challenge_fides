@@ -9,7 +9,6 @@ import csv
 from .views import CreateChannelGroupView
 import requests
 
-
 def get_users():
 	# Get all users from the endpoint
 	response = requests.get(bufet_url)
@@ -39,7 +38,6 @@ def create_chat_room():
 		user_with_taks = get_users()
 		# Rempove the users that were already selected
 		user_with_taks = [user for user in user_with_taks if user.id not in selected_users]
-
 
         # Calculate similarity between users and select the most similar ones
 		user_pairs = [(i, j) for i in range(len(user_with_taks)) for j in range(i + 1, len(user_with_taks))]
@@ -75,6 +73,17 @@ def create_chat_room():
 			writer = csv.writer(file)
 			for i, j, similarity in similarities:
 				writer.writerow([user_with_taks[i].id, user_with_taks[j].id, similarity])
+
+		# otuput data to be visualized
+		with open('random_chats_data.csv', mode='a') as file:
+			writer = csv.writer(file)
+			writer.writerow([user.id for user in selected_users])
+			# Output all similarities to be visualized
+		with open('similarities_data.csv', mode='a') as file:
+			writer = csv.writer(file)
+			for i, j, similarity in similarities:
+				writer.writerow([user_with_taks[i].id, user_with_taks[j].id, similarity])
+
 
 def calculate_similarity(user1, user2):
     # Convert user profiles to numpy arrays

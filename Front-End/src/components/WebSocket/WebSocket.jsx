@@ -4,6 +4,12 @@ import useWebSocket from 'react-use-websocket';
 import React, { useContext, useState } from 'react';
 import { WebSocketContext } from './WebSocketProvider';
 
+
+/* // ChatComponent.js
+import React, { useContext, useState } from 'react';
+import { WebSocketContext } from './WebSocketProvider';
+
+
 const ChatComponent = () => {
     const { messages, sendMessage } = useContext(WebSocketContext);
     const [input, setInput] = useState('');
@@ -82,6 +88,7 @@ export const WebSocketProvider = ({ children }) => {
         </WebSocketContext.Provider>
     );
 };*/
+
 const WebSocketComponent = () => {
   const [message, setMessage] = useState('');
   const [chat, setChat] = useState([]);
